@@ -1,6 +1,7 @@
 import { Outlet, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
+import { ThemeProvider } from "@/hooks/useTheme";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -9,7 +10,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: "CycleSense — Understand your cycle, trust your body" },
-      { name: "description", content: "Track your menstrual cycle, predict ovulation, and log symptoms with the elegant women's health app built for clarity." },
+      { name: "description", content: "Track your menstrual cycle, predict ovulation, log symptoms, chat with an AI health assistant, and connect with a supportive community." },
       { name: "theme-color", content: "#C2185B" },
       { property: "og:title", content: "CycleSense — Women's health, beautifully tracked" },
       { property: "og:description", content: "Predict your period, ovulation, and fertile window with confidence." },
@@ -41,9 +42,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <AuthProvider>
-      <Outlet />
-      <Toaster />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Outlet />
+        <Toaster />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

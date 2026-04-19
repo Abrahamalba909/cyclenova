@@ -10,21 +10,44 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as PremiumRouteImport } from './routes/premium'
+import { Route as PartnerRouteImport } from './routes/partner'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as InviteRouteImport } from './routes/invite'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CommunityRouteImport } from './routes/community'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PartnerAcceptRouteImport } from './routes/partner.accept'
+import { Route as CommunityPostIdRouteImport } from './routes/community.$postId'
+import { Route as PartnerViewOwnerIdRouteImport } from './routes/partner.view.$ownerId'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PremiumRoute = PremiumRouteImport.update({
+  id: '/premium',
+  path: '/premium',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PartnerRoute = PartnerRouteImport.update({
+  id: '/partner',
+  path: '/partner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteRoute = InviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InsightsRoute = InsightsRouteImport.update({
@@ -37,6 +60,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -47,77 +75,150 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PartnerAcceptRoute = PartnerAcceptRouteImport.update({
+  id: '/accept',
+  path: '/accept',
+  getParentRoute: () => PartnerRoute,
+} as any)
+const CommunityPostIdRoute = CommunityPostIdRouteImport.update({
+  id: '/$postId',
+  path: '/$postId',
+  getParentRoute: () => CommunityRoute,
+} as any)
+const PartnerViewOwnerIdRoute = PartnerViewOwnerIdRouteImport.update({
+  id: '/view/$ownerId',
+  path: '/view/$ownerId',
+  getParentRoute: () => PartnerRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
+  '/community': typeof CommunityRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/insights': typeof InsightsRoute
+  '/invite': typeof InviteRoute
   '/onboarding': typeof OnboardingRoute
+  '/partner': typeof PartnerRouteWithChildren
+  '/premium': typeof PremiumRoute
   '/settings': typeof SettingsRoute
+  '/community/$postId': typeof CommunityPostIdRoute
+  '/partner/accept': typeof PartnerAcceptRoute
+  '/partner/view/$ownerId': typeof PartnerViewOwnerIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
+  '/community': typeof CommunityRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/insights': typeof InsightsRoute
+  '/invite': typeof InviteRoute
   '/onboarding': typeof OnboardingRoute
+  '/partner': typeof PartnerRouteWithChildren
+  '/premium': typeof PremiumRoute
   '/settings': typeof SettingsRoute
+  '/community/$postId': typeof CommunityPostIdRoute
+  '/partner/accept': typeof PartnerAcceptRoute
+  '/partner/view/$ownerId': typeof PartnerViewOwnerIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assistant': typeof AssistantRoute
   '/auth': typeof AuthRoute
   '/calendar': typeof CalendarRoute
+  '/community': typeof CommunityRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/insights': typeof InsightsRoute
+  '/invite': typeof InviteRoute
   '/onboarding': typeof OnboardingRoute
+  '/partner': typeof PartnerRouteWithChildren
+  '/premium': typeof PremiumRoute
   '/settings': typeof SettingsRoute
+  '/community/$postId': typeof CommunityPostIdRoute
+  '/partner/accept': typeof PartnerAcceptRoute
+  '/partner/view/$ownerId': typeof PartnerViewOwnerIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assistant'
     | '/auth'
     | '/calendar'
+    | '/community'
     | '/dashboard'
     | '/insights'
+    | '/invite'
     | '/onboarding'
+    | '/partner'
+    | '/premium'
     | '/settings'
+    | '/community/$postId'
+    | '/partner/accept'
+    | '/partner/view/$ownerId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/assistant'
     | '/auth'
     | '/calendar'
+    | '/community'
     | '/dashboard'
     | '/insights'
+    | '/invite'
     | '/onboarding'
+    | '/partner'
+    | '/premium'
     | '/settings'
+    | '/community/$postId'
+    | '/partner/accept'
+    | '/partner/view/$ownerId'
   id:
     | '__root__'
     | '/'
+    | '/assistant'
     | '/auth'
     | '/calendar'
+    | '/community'
     | '/dashboard'
     | '/insights'
+    | '/invite'
     | '/onboarding'
+    | '/partner'
+    | '/premium'
     | '/settings'
+    | '/community/$postId'
+    | '/partner/accept'
+    | '/partner/view/$ownerId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssistantRoute: typeof AssistantRoute
   AuthRoute: typeof AuthRoute
   CalendarRoute: typeof CalendarRoute
+  CommunityRoute: typeof CommunityRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   InsightsRoute: typeof InsightsRoute
+  InviteRoute: typeof InviteRoute
   OnboardingRoute: typeof OnboardingRoute
+  PartnerRoute: typeof PartnerRouteWithChildren
+  PremiumRoute: typeof PremiumRoute
   SettingsRoute: typeof SettingsRoute
 }
 
@@ -130,11 +231,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/premium': {
+      id: '/premium'
+      path: '/premium'
+      fullPath: '/premium'
+      preLoaderRoute: typeof PremiumRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/partner': {
+      id: '/partner'
+      path: '/partner'
+      fullPath: '/partner'
+      preLoaderRoute: typeof PartnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite': {
+      id: '/invite'
+      path: '/invite'
+      fullPath: '/invite'
+      preLoaderRoute: typeof InviteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/insights': {
@@ -151,6 +273,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/calendar': {
       id: '/calendar'
       path: '/calendar'
@@ -165,6 +294,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -172,16 +308,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/partner/accept': {
+      id: '/partner/accept'
+      path: '/accept'
+      fullPath: '/partner/accept'
+      preLoaderRoute: typeof PartnerAcceptRouteImport
+      parentRoute: typeof PartnerRoute
+    }
+    '/community/$postId': {
+      id: '/community/$postId'
+      path: '/$postId'
+      fullPath: '/community/$postId'
+      preLoaderRoute: typeof CommunityPostIdRouteImport
+      parentRoute: typeof CommunityRoute
+    }
+    '/partner/view/$ownerId': {
+      id: '/partner/view/$ownerId'
+      path: '/view/$ownerId'
+      fullPath: '/partner/view/$ownerId'
+      preLoaderRoute: typeof PartnerViewOwnerIdRouteImport
+      parentRoute: typeof PartnerRoute
+    }
   }
 }
 
+interface CommunityRouteChildren {
+  CommunityPostIdRoute: typeof CommunityPostIdRoute
+}
+
+const CommunityRouteChildren: CommunityRouteChildren = {
+  CommunityPostIdRoute: CommunityPostIdRoute,
+}
+
+const CommunityRouteWithChildren = CommunityRoute._addFileChildren(
+  CommunityRouteChildren,
+)
+
+interface PartnerRouteChildren {
+  PartnerAcceptRoute: typeof PartnerAcceptRoute
+  PartnerViewOwnerIdRoute: typeof PartnerViewOwnerIdRoute
+}
+
+const PartnerRouteChildren: PartnerRouteChildren = {
+  PartnerAcceptRoute: PartnerAcceptRoute,
+  PartnerViewOwnerIdRoute: PartnerViewOwnerIdRoute,
+}
+
+const PartnerRouteWithChildren =
+  PartnerRoute._addFileChildren(PartnerRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssistantRoute: AssistantRoute,
   AuthRoute: AuthRoute,
   CalendarRoute: CalendarRoute,
+  CommunityRoute: CommunityRouteWithChildren,
   DashboardRoute: DashboardRoute,
   InsightsRoute: InsightsRoute,
+  InviteRoute: InviteRoute,
   OnboardingRoute: OnboardingRoute,
+  PartnerRoute: PartnerRouteWithChildren,
+  PremiumRoute: PremiumRoute,
   SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
