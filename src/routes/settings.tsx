@@ -1,12 +1,14 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, User, Calendar as CalIcon, Bell, Heart } from "lucide-react";
+import { LogOut, User, Calendar as CalIcon, Bell, Heart, Moon, Sun, Crown, Gift, Users, Sparkles } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
+import { useSubscription } from "@/hooks/useSubscription";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -16,18 +18,19 @@ export const Route = createFileRoute("/settings")({
 
 function Settings() {
   const { user, loading, signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
+  const { isPremium } = useSubscription();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [age, setAge] = useState<number>(28);
   const [cycleLength, setCycleLength] = useState<number>(28);
   const [periodLength, setPeriodLength] = useState<number>(5);
   const [notifications, setNotifications] = useState(true);
+  const [emailNotifs, setEmailNotifs] = useState(true);
   const [intention, setIntention] = useState<"conceive" | "avoid" | "tracking">("tracking");
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth" });
-  }, [user, loading, navigate]);
+  useEffect(() => { if (!loading && !user) navigate({ to: "/auth" }); }, [user, loading, navigate]);
 
   useEffect(() => {
     if (!user) return;
@@ -39,6 +42,7 @@ function Settings() {
         setCycleLength(data.cycle_length);
         setPeriodLength(data.period_length);
         setNotifications(data.notifications_enabled);
+        setEmailNotifs(data.email_notifications_enabled ?? true);
         setIntention(data.intention as typeof intention);
       }
     })();
@@ -56,6 +60,7 @@ function Settings() {
           cycle_length: cycleLength,
           period_length: periodLength,
           notifications_enabled: notifications,
+          email_notifications_enabled: emailNotifs,
           intention,
         })
         .eq("user_id", user.id);
@@ -68,10 +73,7 @@ function Settings() {
     }
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate({ to: "/" });
-  };
+  const handleSignOut = async () => { await signOut(); navigate({ to: "/" }); };
 
   return (
     <AppShell>
@@ -79,6 +81,26 @@ function Settings() {
         <h1 className="font-display text-3xl font-bold">Settings</h1>
         <p className="text-sm text-muted-foreground mt-1">{user?.email}</p>
       </div>
+
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        <NavCard to="/premium" icon={<Crown className="h-4 w-4" />} title={isPremium ? "Premium ✓" : "Upgrade"} />
+        <NavCard to="/partner" icon={<Heart className="h-4 w-4" fill="currentColor" />} title="Partner" />
+        <NavCard to="/invite" icon={<Gift className="h-4 w-4" />} title="Invite friends" />
+        <NavCard to="/community" icon={<Users className="h-4 w-4" />} title="Community" />
+      </div>
+
+      <Section icon={<Sparkles className="h-4 w-4" />} title="Appearance">
+        <div className="grid grid-cols-2 gap-2">
+          <button onClick={() => setTheme("light")}
+            className={`p-3 rounded-2xl border-2 transition-all flex items-center gap-2 ${theme === "light" ? "border-primary bg-primary-soft" : "border-border"}`}>
+            <Sun className="h-4 w-4" /> <span className="text-sm font-medium">Light</span>
+          </button>
+          <button onClick={() => setTheme("dark")}
+            className={`p-3 rounded-2xl border-2 transition-all flex items-center gap-2 ${theme === "dark" ? "border-primary bg-primary-soft" : "border-border"}`}>
+            <Moon className="h-4 w-4" /> <span className="text-sm font-medium">Dark</span>
+          </button>
+        </div>
+      </Section>
 
       <Section icon={<User className="h-4 w-4" />} title="Profile">
         <Field label="Display name">
@@ -99,13 +121,8 @@ function Settings() {
         <Field label="Goal">
           <div className="grid grid-cols-3 gap-2">
             {(["tracking", "conceive", "avoid"] as const).map((v) => (
-              <button
-                key={v}
-                onClick={() => setIntention(v)}
-                className={`p-2.5 rounded-xl border-2 text-xs font-semibold capitalize transition-all ${
-                  intention === v ? "border-primary bg-primary-soft text-primary" : "border-border"
-                }`}
-              >
+              <button key={v} onClick={() => setIntention(v)}
+                className={`p-2.5 rounded-xl border-2 text-xs font-semibold capitalize transition-all ${intention === v ? "border-primary bg-primary-soft text-primary" : "border-border"}`}>
                 {v === "conceive" ? "Conceive" : v === "avoid" ? "Avoid" : "Track"}
               </button>
             ))}
@@ -116,10 +133,17 @@ function Settings() {
       <Section icon={<Bell className="h-4 w-4" />} title="Notifications">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium">Period & ovulation reminders</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Get a heads-up before key days.</p>
+            <p className="text-sm font-medium">In-app reminders</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Period & ovulation heads-ups.</p>
           </div>
           <Switch checked={notifications} onCheckedChange={setNotifications} />
+        </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium">Email reminders</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Period, ovulation, partner invites & community replies.</p>
+          </div>
+          <Switch checked={emailNotifs} onCheckedChange={setEmailNotifs} />
         </div>
       </Section>
 
@@ -135,6 +159,15 @@ function Settings() {
         Made with <Heart className="h-3 w-3 text-primary" fill="currentColor" /> for your wellbeing
       </p>
     </AppShell>
+  );
+}
+
+function NavCard({ to, icon, title }: { to: string; icon: React.ReactNode; title: string }) {
+  return (
+    <Link to={to} className="bg-card border rounded-2xl p-4 shadow-soft flex items-center gap-2 hover:border-primary transition-colors">
+      <div className="h-8 w-8 rounded-xl bg-primary-soft text-primary flex items-center justify-center">{icon}</div>
+      <span className="text-sm font-semibold">{title}</span>
+    </Link>
   );
 }
 

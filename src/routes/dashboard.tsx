@@ -1,7 +1,7 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Droplet, Sparkles, Heart, Plus } from "lucide-react";
+import { Droplet, Sparkles, Heart, Plus, Settings as SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/AppShell";
 import { PhaseRing } from "@/components/PhaseRing";
@@ -74,9 +74,14 @@ function Dashboard() {
 
   return (
     <AppShell>
-      <div className="mb-6">
-        <p className="text-xs uppercase tracking-widest text-muted-foreground">{format(new Date(), "EEEE, MMMM d")}</p>
-        <h1 className="font-display text-3xl font-bold mt-1">Hello, {name}</h1>
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <p className="text-xs uppercase tracking-widest text-muted-foreground">{format(new Date(), "EEEE, MMMM d")}</p>
+          <h1 className="font-display text-3xl font-bold mt-1">Hello, {name}</h1>
+        </div>
+        <Link to="/settings" className="h-10 w-10 rounded-full bg-card border flex items-center justify-center text-muted-foreground hover:text-primary">
+          <SettingsIcon className="h-4 w-4" />
+        </Link>
       </div>
 
       {stats && (

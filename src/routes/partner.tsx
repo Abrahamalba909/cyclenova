@@ -71,8 +71,9 @@ function PartnerPage() {
   };
 
   const updateShare = async (key: keyof Shares, value: boolean) => {
-    setShares((s) => ({ ...s, [key]: value }));
-    await supabase.from("partner_shares").update({ [key]: value }).eq("user_id", user!.id);
+    const next = { ...shares, [key]: value };
+    setShares(next);
+    await supabase.from("partner_shares").update(next).eq("user_id", user!.id);
   };
 
   if (subLoading) return <AppShell><div className="text-center py-20 text-muted-foreground">Loading…</div></AppShell>;
