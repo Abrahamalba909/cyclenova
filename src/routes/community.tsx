@@ -12,6 +12,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/community")({
+  head: () => ({
+    meta: [
+      { title: "Community — CycleSense" },
+      { name: "description", content: "Join anonymous discussions on cycles, PMS, fertility, and women's wellness in a safe, supportive community." },
+      { property: "og:title", content: "CycleSense Community — Anonymous women's health discussions" },
+      { property: "og:description", content: "Talk openly about cycles, PMS, fertility, and wellness with a supportive anonymous community." },
+      { property: "og:image", content: "/icons/icon-512.png" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "CycleSense Community" },
+      { name: "twitter:description", content: "Anonymous discussions on cycles, PMS, fertility, and wellness." },
+      { name: "twitter:image", content: "/icons/icon-512.png" },
+    ],
+  }),
   component: CommunityPage,
 });
 

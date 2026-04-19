@@ -9,6 +9,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/premium")({
+  head: () => ({
+    meta: [
+      { title: "Premium — CycleSense" },
+      { name: "description", content: "Unlock advanced predictions, partner mode, AI assistant, and detailed health insights with CycleSense Premium." },
+      { property: "og:title", content: "CycleSense Premium — Advanced cycle insights & AI" },
+      { property: "og:description", content: "Advanced predictions, partner mode, AI health assistant, and detailed insights — $5/month." },
+      { property: "og:image", content: "/icons/icon-512.png" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "CycleSense Premium" },
+      { name: "twitter:description", content: "Advanced predictions, partner mode, AI assistant — $5/month." },
+      { name: "twitter:image", content: "/icons/icon-512.png" },
+    ],
+  }),
   component: PremiumPage,
 });
 
