@@ -21,10 +21,14 @@ function Landing() {
     <div className="min-h-screen bg-gradient-hero">
       {/* Header */}
       <header className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-soft">
-            <Heart className="h-5 w-5 text-primary-foreground" fill="currentColor" />
-          </div>
+        <div className="flex items-center gap-2.5">
+          <img
+            src="/icons/icon-192.png"
+            alt="CycleSense logo"
+            width={40}
+            height={40}
+            className="h-10 w-10 rounded-2xl shadow-soft"
+          />
           <span className="font-display text-xl font-bold tracking-tight">CycleSense</span>
         </div>
         <Link to="/auth">
