@@ -14,6 +14,104 @@ export type Database = {
   }
   public: {
     Tables: {
+      comments: {
+        Row: {
+          anonymous_handle: string
+          body: string
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          anonymous_handle: string
+          body: string
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          anonymous_handle?: string
+          body?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      partner_shares: {
+        Row: {
+          id: string
+          share_fertile: boolean
+          share_ovulation: boolean
+          share_period: boolean
+          share_pms: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          share_fertile?: boolean
+          share_ovulation?: boolean
+          share_period?: boolean
+          share_pms?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          share_fertile?: boolean
+          share_ovulation?: boolean
+          share_period?: boolean
+          share_pms?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      partners: {
+        Row: {
+          accepted_at: string | null
+          created_at: string
+          id: string
+          invite_code: string
+          invite_email: string | null
+          owner_id: string
+          partner_id: string | null
+          status: string
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string
+          id?: string
+          invite_code?: string
+          invite_email?: string | null
+          owner_id: string
+          partner_id?: string | null
+          status?: string
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string
+          id?: string
+          invite_code?: string
+          invite_email?: string | null
+          owner_id?: string
+          partner_id?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       periods: {
         Row: {
           created_at: string
@@ -47,46 +145,237 @@ export type Database = {
         }
         Relationships: []
       }
+      post_likes: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_reports: {
+        Row: {
+          comment_id: string | null
+          created_at: string
+          id: string
+          post_id: string | null
+          reason: string
+          reporter_id: string
+        }
+        Insert: {
+          comment_id?: string | null
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          reason: string
+          reporter_id: string
+        }
+        Update: {
+          comment_id?: string | null
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          reason?: string
+          reporter_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_reports_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_reports_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          anonymous_handle: string
+          body: string
+          category: string
+          comments_count: number
+          created_at: string
+          id: string
+          is_hidden: boolean
+          likes_count: number
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          anonymous_handle: string
+          body: string
+          category: string
+          comments_count?: number
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          likes_count?: number
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          anonymous_handle?: string
+          body?: string
+          category?: string
+          comments_count?: number
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          likes_count?: number
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           age: number | null
+          anonymous_handle: string | null
           created_at: string
           cycle_length: number
           display_name: string | null
+          email_notifications_enabled: boolean
           id: string
           intention: string
           last_period_start: string | null
           notifications_enabled: boolean
           onboarded: boolean
           period_length: number
+          referral_code: string | null
+          theme: string
           updated_at: string
           user_id: string
         }
         Insert: {
           age?: number | null
+          anonymous_handle?: string | null
           created_at?: string
           cycle_length?: number
           display_name?: string | null
+          email_notifications_enabled?: boolean
           id?: string
           intention?: string
           last_period_start?: string | null
           notifications_enabled?: boolean
           onboarded?: boolean
           period_length?: number
+          referral_code?: string | null
+          theme?: string
           updated_at?: string
           user_id: string
         }
         Update: {
           age?: number | null
+          anonymous_handle?: string | null
           created_at?: string
           cycle_length?: number
           display_name?: string | null
+          email_notifications_enabled?: boolean
           id?: string
           intention?: string
           last_period_start?: string | null
           notifications_enabled?: boolean
           onboarded?: boolean
           period_length?: number
+          referral_code?: string | null
+          theme?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          invitee_email: string | null
+          invitee_user_id: string | null
+          referrer_id: string
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          invitee_email?: string | null
+          invitee_user_id?: string | null
+          referrer_id: string
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          invitee_email?: string | null
+          invitee_user_id?: string | null
+          referrer_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          billing_cycle: string | null
+          created_at: string
+          current_period_end: string | null
+          id: string
+          plan: string
+          status: string
+          trial_ends_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          billing_cycle?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          status?: string
+          trial_ends_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          billing_cycle?: string | null
+          created_at?: string
+          current_period_end?: string | null
+          id?: string
+          plan?: string
+          status?: string
+          trial_ends_at?: string | null
           updated_at?: string
           user_id?: string
         }
