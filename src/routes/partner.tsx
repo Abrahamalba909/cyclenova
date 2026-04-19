@@ -12,6 +12,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/partner")({
+  head: () => ({
+    meta: [
+      { title: "Partner Mode — CycleSense" },
+      { name: "description", content: "Privately share your cycle phases, fertile window, and period predictions with your partner — you control what they see." },
+      { property: "og:title", content: "CycleSense Partner Mode — Share your cycle, your way" },
+      { property: "og:description", content: "Invite your partner to see exactly what you choose: period, ovulation, fertile window, or PMS." },
+      { property: "og:image", content: "/icons/icon-512.png" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "CycleSense Partner Mode" },
+      { name: "twitter:description", content: "Privately share your cycle with your partner." },
+      { name: "twitter:image", content: "/icons/icon-512.png" },
+    ],
+  }),
   component: PartnerPage,
 });
 
