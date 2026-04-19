@@ -12,6 +12,19 @@ import { fmt, getDayPhase, phaseLabel, type CycleProfile, type PeriodEntry } fro
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/calendar")({
+  head: () => ({
+    meta: [
+      { title: "Calendar — CycleSense" },
+      { name: "description", content: "Log your period, track symptoms, and visualize your cycle phases on a beautiful calendar." },
+      { property: "og:title", content: "CycleSense Calendar — Track every cycle day" },
+      { property: "og:description", content: "Log periods, symptoms, and see your fertile window and ovulation at a glance." },
+      { property: "og:image", content: "/icons/icon-512.png" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "CycleSense Calendar" },
+      { name: "twitter:description", content: "Track periods, symptoms, and cycle phases visually." },
+      { name: "twitter:image", content: "/icons/icon-512.png" },
+    ],
+  }),
   component: CalendarPage,
 });
 
