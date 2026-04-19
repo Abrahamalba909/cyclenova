@@ -8,6 +8,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { computeAverageCycleLength, computeRegularity, type PeriodEntry } from "@/lib/cycle";
 
 export const Route = createFileRoute("/insights")({
+  head: () => ({
+    meta: [
+      { title: "Insights — CycleSense" },
+      { name: "description", content: "Discover patterns in your cycle: average length, regularity, symptom trends, and personalized health insights." },
+      { property: "og:title", content: "CycleSense Insights — Patterns from your cycle" },
+      { property: "og:description", content: "Average cycle length, regularity scores, and symptom trends — beautifully visualized." },
+      { property: "og:image", content: "/icons/icon-512.png" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "CycleSense Insights" },
+      { name: "twitter:description", content: "Cycle patterns, regularity, and symptom trends." },
+      { name: "twitter:image", content: "/icons/icon-512.png" },
+    ],
+  }),
   component: Insights,
 });
 
