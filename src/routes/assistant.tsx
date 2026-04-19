@@ -10,6 +10,19 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/assistant")({
+  head: () => ({
+    meta: [
+      { title: "AI Health Assistant — CycleSense" },
+      { name: "description", content: "Chat with an AI assistant trained on women's health: cycles, ovulation, PMS, fertility, and reproductive wellness." },
+      { property: "og:title", content: "CycleSense AI Health Assistant" },
+      { property: "og:description", content: "Get evidence-based answers on cycles, ovulation, PMS, fertility, and reproductive health — anytime." },
+      { property: "og:image", content: "/icons/icon-512.png" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "CycleSense AI Health Assistant" },
+      { name: "twitter:description", content: "Evidence-based answers on women's health, anytime." },
+      { name: "twitter:image", content: "/icons/icon-512.png" },
+    ],
+  }),
   component: AssistantPage,
 });
 
