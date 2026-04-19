@@ -14,7 +14,141 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      periods: {
+        Row: {
+          created_at: string
+          end_date: string | null
+          flow: string | null
+          id: string
+          notes: string | null
+          start_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          end_date?: string | null
+          flow?: string | null
+          id?: string
+          notes?: string | null
+          start_date: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string | null
+          flow?: string | null
+          id?: string
+          notes?: string | null
+          start_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          age: number | null
+          created_at: string
+          cycle_length: number
+          display_name: string | null
+          id: string
+          intention: string
+          last_period_start: string | null
+          notifications_enabled: boolean
+          onboarded: boolean
+          period_length: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age?: number | null
+          created_at?: string
+          cycle_length?: number
+          display_name?: string | null
+          id?: string
+          intention?: string
+          last_period_start?: string | null
+          notifications_enabled?: boolean
+          onboarded?: boolean
+          period_length?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age?: number | null
+          created_at?: string
+          cycle_length?: number
+          display_name?: string | null
+          id?: string
+          intention?: string
+          last_period_start?: string | null
+          notifications_enabled?: boolean
+          onboarded?: boolean
+          period_length?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      symptoms: {
+        Row: {
+          acne: number | null
+          back_pain: number | null
+          bloating: number | null
+          cramps: number | null
+          created_at: string
+          energy: number | null
+          fatigue: number | null
+          headache: number | null
+          id: string
+          libido: number | null
+          log_date: string
+          mood: number | null
+          notes: string | null
+          sleep: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          acne?: number | null
+          back_pain?: number | null
+          bloating?: number | null
+          cramps?: number | null
+          created_at?: string
+          energy?: number | null
+          fatigue?: number | null
+          headache?: number | null
+          id?: string
+          libido?: number | null
+          log_date: string
+          mood?: number | null
+          notes?: string | null
+          sleep?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          acne?: number | null
+          back_pain?: number | null
+          bloating?: number | null
+          cramps?: number | null
+          created_at?: string
+          energy?: number | null
+          fatigue?: number | null
+          headache?: number | null
+          id?: string
+          libido?: number | null
+          log_date?: string
+          mood?: number | null
+          notes?: string | null
+          sleep?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
