@@ -9,6 +9,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/invite")({
+  head: () => ({
+    meta: [
+      { title: "Invite Friends — CycleSense" },
+      { name: "description", content: "Invite friends to CycleSense and unlock free Premium when they join. Share via link, email, or social." },
+      { property: "og:title", content: "Invite friends to CycleSense — earn free Premium" },
+      { property: "og:description", content: "Refer 3 friends and unlock a free month of Premium. Share via link, email, or social." },
+      { property: "og:image", content: "/icons/icon-512.png" },
+      { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "Invite friends to CycleSense" },
+      { name: "twitter:description", content: "Refer 3 friends and earn a free month of Premium." },
+      { name: "twitter:image", content: "/icons/icon-512.png" },
+    ],
+  }),
   component: InvitePage,
 });
 
