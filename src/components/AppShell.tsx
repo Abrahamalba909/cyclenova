@@ -15,7 +15,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   return (
     <div className="min-h-screen bg-gradient-hero">
-      <main className="max-w-2xl mx-auto pb-28 pt-6 px-4 sm:px-6">{children}</main>
+      <header className="max-w-2xl mx-auto px-4 sm:px-6 pt-5 flex items-center gap-2.5">
+        <img src="/icons/icon-192.png" alt="CycleSense" width={32} height={32} className="h-8 w-8 rounded-xl shadow-soft" />
+        <span className="font-display text-base font-bold tracking-tight">CycleSense</span>
+      </header>
+      <main className="max-w-2xl mx-auto pb-28 pt-3 px-4 sm:px-6">{children}</main>
       <nav className="fixed bottom-0 inset-x-0 z-40">
         <div className="max-w-2xl mx-auto px-3 pb-4">
           <div className="bg-card/95 backdrop-blur-xl border rounded-full shadow-glow flex items-center justify-around p-2">
