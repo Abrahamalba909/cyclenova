@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as PremiumRouteImport } from './routes/premium'
 import { Route as PartnerRouteImport } from './routes/partner'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
@@ -25,9 +27,19 @@ import { Route as PartnerAcceptRouteImport } from './routes/partner.accept'
 import { Route as CommunityPostIdRouteImport } from './routes/community.$postId'
 import { Route as PartnerViewOwnerIdRouteImport } from './routes/partner.view.$ownerId'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PremiumRoute = PremiumRouteImport.update({
@@ -113,7 +125,9 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/partner': typeof PartnerRouteWithChildren
   '/premium': typeof PremiumRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/community/$postId': typeof CommunityPostIdRoute
   '/partner/accept': typeof PartnerAcceptRoute
   '/partner/view/$ownerId': typeof PartnerViewOwnerIdRoute
@@ -130,7 +144,9 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/partner': typeof PartnerRouteWithChildren
   '/premium': typeof PremiumRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/community/$postId': typeof CommunityPostIdRoute
   '/partner/accept': typeof PartnerAcceptRoute
   '/partner/view/$ownerId': typeof PartnerViewOwnerIdRoute
@@ -148,7 +164,9 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/partner': typeof PartnerRouteWithChildren
   '/premium': typeof PremiumRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/settings': typeof SettingsRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/community/$postId': typeof CommunityPostIdRoute
   '/partner/accept': typeof PartnerAcceptRoute
   '/partner/view/$ownerId': typeof PartnerViewOwnerIdRoute
@@ -167,7 +185,9 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/partner'
     | '/premium'
+    | '/robots.txt'
     | '/settings'
+    | '/sitemap.xml'
     | '/community/$postId'
     | '/partner/accept'
     | '/partner/view/$ownerId'
@@ -184,7 +204,9 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/partner'
     | '/premium'
+    | '/robots.txt'
     | '/settings'
+    | '/sitemap.xml'
     | '/community/$postId'
     | '/partner/accept'
     | '/partner/view/$ownerId'
@@ -201,7 +223,9 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/partner'
     | '/premium'
+    | '/robots.txt'
     | '/settings'
+    | '/sitemap.xml'
     | '/community/$postId'
     | '/partner/accept'
     | '/partner/view/$ownerId'
@@ -219,16 +243,32 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   PartnerRoute: typeof PartnerRouteWithChildren
   PremiumRoute: typeof PremiumRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SettingsRoute: typeof SettingsRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/premium': {
@@ -369,7 +409,9 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   PartnerRoute: PartnerRouteWithChildren,
   PremiumRoute: PremiumRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SettingsRoute: SettingsRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
