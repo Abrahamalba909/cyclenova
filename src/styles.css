@@ -277,7 +277,7 @@
   50%      { transform: translate3d(0, -24px, 0); opacity: 0.85; }
 }
 
-/* The character — anchored bottom-right, slow breathing */
+/* The character — anchored bottom-right, slow breathing + scroll parallax */
 .ambient-character {
   position: absolute;
   bottom: 0;
@@ -286,10 +286,24 @@
   max-width: 78vw;
   pointer-events: none;
   will-change: transform;
-  animation: ambient-breath 7s ease-in-out infinite;
+  /* Parallax offset is set via JS on --parallax-y; default 0 */
+  --parallax-y: 0px;
+  transform: translate3d(0, var(--parallax-y), 0);
+  transition: transform 0.18s linear;
   /* Soft warmth glow behind character */
   filter: drop-shadow(0 0 60px oklch(0.7 0.18 350 / 0.25));
   opacity: 0.92;
+}
+
+/* Inner breathing wrapper - keeps parallax & breath independent */
+.ambient-character img {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  animation: ambient-breath 7s ease-in-out infinite;
+  will-change: transform;
 }
 
 .dark .ambient-character {
@@ -297,17 +311,9 @@
   opacity: 0.88;
 }
 
-.ambient-character img {
-  width: 100%;
-  height: auto;
-  display: block;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
 @keyframes ambient-breath {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%      { transform: translate3d(0, -4px, 0) scale(1.012); }
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.012) translateY(-4px); }
 }
 
 /* Vignette overlays — keep top of screen readable for headers/cards */
