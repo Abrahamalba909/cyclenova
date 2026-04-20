@@ -150,3 +150,196 @@
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
 }
+
+/* ============================================
+   Ambient Scene — themed animated background
+   ============================================ */
+
+.ambient-scene {
+  /* Smooth color transitions when theme changes */
+  transition: opacity 0.6s ease;
+}
+
+.ambient-wash-light,
+.ambient-wash-dark {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.8s ease;
+}
+
+.ambient-wash-light {
+  background:
+    radial-gradient(ellipse at 80% 90%, oklch(0.92 0.07 350 / 0.55) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 10%, oklch(0.96 0.04 340 / 0.7) 0%, transparent 60%),
+    linear-gradient(160deg, oklch(0.98 0.015 340) 0%, oklch(0.96 0.03 350) 100%);
+}
+
+.ambient-wash-dark {
+  background:
+    radial-gradient(ellipse at 80% 90%, oklch(0.32 0.14 340 / 0.7) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 10%, oklch(0.22 0.1 310 / 0.6) 0%, transparent 60%),
+    linear-gradient(160deg, oklch(0.1 0.03 320) 0%, oklch(0.14 0.05 340) 100%);
+}
+
+/* Drifting glow orbs */
+.ambient-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(60px);
+  opacity: 0.55;
+  will-change: transform, opacity;
+  animation: ambient-drift 22s ease-in-out infinite;
+}
+
+.dark .ambient-orb { opacity: 0.45; mix-blend-mode: screen; }
+
+.ambient-orb--1 {
+  width: 380px; height: 380px;
+  top: -80px; left: -100px;
+  background: radial-gradient(circle, oklch(0.85 0.12 350) 0%, transparent 70%);
+  animation-delay: 0s;
+}
+.dark .ambient-orb--1 {
+  background: radial-gradient(circle, oklch(0.55 0.22 340) 0%, transparent 70%);
+}
+
+.ambient-orb--2 {
+  width: 460px; height: 460px;
+  top: 30%; right: -160px;
+  background: radial-gradient(circle, oklch(0.9 0.08 340) 0%, transparent 70%);
+  animation-delay: -7s;
+  animation-duration: 28s;
+}
+.dark .ambient-orb--2 {
+  background: radial-gradient(circle, oklch(0.5 0.24 0) 0%, transparent 70%);
+}
+
+.ambient-orb--3 {
+  width: 320px; height: 320px;
+  bottom: 10%; left: 15%;
+  background: radial-gradient(circle, oklch(0.88 0.1 0) 0%, transparent 70%);
+  animation-delay: -14s;
+  animation-duration: 32s;
+}
+.dark .ambient-orb--3 {
+  background: radial-gradient(circle, oklch(0.45 0.2 320) 0%, transparent 70%);
+}
+
+@keyframes ambient-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33%      { transform: translate3d(40px, -30px, 0) scale(1.08); }
+  66%      { transform: translate3d(-30px, 40px, 0) scale(0.95); }
+}
+
+/* Particles (light: dust motes, dark: stars) */
+.ambient-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.ambient-particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 9999px;
+  background: oklch(0.7 0.15 350 / 0.6);
+  will-change: transform, opacity;
+  animation: ambient-float 14s ease-in-out infinite;
+}
+
+.dark .ambient-particle {
+  background: oklch(0.95 0.05 340 / 0.85);
+  box-shadow: 0 0 6px oklch(0.7 0.22 340 / 0.6);
+}
+
+.ambient-particle--0 { top: 12%; left: 8%;  animation-delay: 0s;     animation-duration: 16s; }
+.ambient-particle--1 { top: 24%; left: 78%; animation-delay: -3s;    animation-duration: 19s; width: 3px; height: 3px; }
+.ambient-particle--2 { top: 38%; left: 22%; animation-delay: -6s;    animation-duration: 14s; width: 5px; height: 5px; }
+.ambient-particle--3 { top: 55%; left: 88%; animation-delay: -2s;    animation-duration: 22s; }
+.ambient-particle--4 { top: 68%; left: 12%; animation-delay: -9s;    animation-duration: 17s; width: 3px; height: 3px; }
+.ambient-particle--5 { top: 82%; left: 70%; animation-delay: -5s;    animation-duration: 20s; width: 6px; height: 6px; }
+
+/* Repeat with offsets for additional particles via nth-child variations */
+.ambient-particle:nth-child(7)  { top: 18%; left: 45%; animation-delay: -11s; }
+.ambient-particle:nth-child(8)  { top: 30%; left: 5%;  animation-delay: -4s; width: 5px; height: 5px; }
+.ambient-particle:nth-child(9)  { top: 45%; left: 60%; animation-delay: -8s; }
+.ambient-particle:nth-child(10) { top: 60%; left: 35%; animation-delay: -13s; width: 3px; height: 3px; }
+.ambient-particle:nth-child(11) { top: 72%; left: 50%; animation-delay: -1s; }
+.ambient-particle:nth-child(12) { top: 88%; left: 25%; animation-delay: -10s; width: 4px; height: 4px; }
+.ambient-particle:nth-child(13) { top: 8%;  left: 60%; animation-delay: -7s; width: 3px; height: 3px; }
+.ambient-particle:nth-child(14) { top: 50%; left: 5%;  animation-delay: -12s; }
+.ambient-particle:nth-child(15) { top: 92%; left: 55%; animation-delay: -6s; width: 5px; height: 5px; }
+.ambient-particle:nth-child(16) { top: 35%; left: 40%; animation-delay: -15s; width: 3px; height: 3px; }
+.ambient-particle:nth-child(17) { top: 78%; left: 90%; animation-delay: -2s; }
+.ambient-particle:nth-child(18) { top: 20%; left: 28%; animation-delay: -9s; width: 4px; height: 4px; }
+
+@keyframes ambient-float {
+  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.3; }
+  50%      { transform: translate3d(0, -24px, 0); opacity: 0.85; }
+}
+
+/* The character — anchored bottom-right, slow breathing */
+.ambient-character {
+  position: absolute;
+  bottom: 0;
+  right: -8%;
+  width: min(78vw, 520px);
+  max-width: 78vw;
+  pointer-events: none;
+  will-change: transform;
+  animation: ambient-breath 7s ease-in-out infinite;
+  /* Soft warmth glow behind character */
+  filter: drop-shadow(0 0 60px oklch(0.7 0.18 350 / 0.25));
+  opacity: 0.92;
+}
+
+.dark .ambient-character {
+  filter: drop-shadow(0 0 80px oklch(0.55 0.22 340 / 0.45));
+  opacity: 0.88;
+}
+
+.ambient-character img {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@keyframes ambient-breath {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(0, -4px, 0) scale(1.012); }
+}
+
+/* Vignette overlays — keep top of screen readable for headers/cards */
+.ambient-vignette-light,
+.ambient-vignette-dark {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.ambient-vignette-light {
+  background:
+    linear-gradient(180deg, oklch(1 0 0 / 0.45) 0%, transparent 22%, transparent 60%, oklch(1 0 0 / 0.35) 100%);
+}
+
+.ambient-vignette-dark {
+  background:
+    linear-gradient(180deg, oklch(0.1 0.03 340 / 0.6) 0%, transparent 22%, transparent 55%, oklch(0.1 0.03 340 / 0.55) 100%);
+}
+
+/* Reduced motion — pause all ambient animations */
+@media (prefers-reduced-motion: reduce) {
+  .ambient-orb,
+  .ambient-particle,
+  .ambient-character {
+    animation: none !important;
+  }
+}
+
+/* On very small screens, slightly fade the character so cards stay readable */
+@media (max-width: 380px) {
+  .ambient-character { opacity: 0.78; }
+}
+
