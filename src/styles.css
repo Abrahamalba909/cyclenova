@@ -339,7 +339,8 @@
 @media (prefers-reduced-motion: reduce) {
   .ambient-orb,
   .ambient-particle,
-  .ambient-character {
+  .ambient-character,
+  .ambient-character img {
     animation: none !important;
   }
 }
@@ -347,5 +348,92 @@
 /* On very small screens, slightly fade the character so cards stay readable */
 @media (max-width: 380px) {
   .ambient-character { opacity: 0.78; }
+}
+
+/* ============================================
+   Launch Splash — premium app-open animation
+   ============================================ */
+.launch-splash {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1.5rem; pointer-events: none; opacity: 1;
+  transition: opacity 0.7s ease;
+}
+.launch-splash--out { opacity: 0; }
+
+.launch-splash__bg { position: absolute; inset: 0; z-index: 0; }
+.launch-splash--light .launch-splash__bg {
+  background: radial-gradient(circle at 50% 50%, oklch(0.99 0.01 340) 0%, oklch(0.96 0.04 350) 60%, oklch(0.92 0.07 350) 100%);
+}
+.launch-splash--dark .launch-splash__bg {
+  background: radial-gradient(circle at 50% 50%, oklch(0.18 0.06 320) 0%, oklch(0.1 0.04 340) 70%, oklch(0.06 0.02 340) 100%);
+}
+
+.launch-splash__halo {
+  position: absolute; width: 480px; height: 480px; border-radius: 9999px;
+  filter: blur(80px); opacity: 0; z-index: 1;
+  animation: splash-halo 2.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+.launch-splash--light .launch-splash__halo {
+  background: radial-gradient(circle, oklch(0.85 0.15 350 / 0.7) 0%, transparent 70%);
+}
+.launch-splash--dark .launch-splash__halo {
+  background: radial-gradient(circle, oklch(0.55 0.25 340 / 0.85) 0%, transparent 70%);
+}
+@keyframes splash-halo {
+  0%   { transform: scale(0.6); opacity: 0; }
+  35%  { opacity: 0.55; }
+  60%  { transform: scale(1.05); opacity: 0.9; }
+  100% { transform: scale(1.15); opacity: 0.6; }
+}
+
+.launch-splash__logo-wrap {
+  position: relative; width: 132px; height: 132px; z-index: 2;
+  border-radius: 32px; overflow: hidden;
+}
+.launch-splash__logo {
+  width: 100%; height: 100%; display: block; object-fit: cover; border-radius: 32px;
+  opacity: 0; transform: scale(0.92);
+  animation: splash-logo-in 2.4s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  filter: brightness(0.7);
+}
+@keyframes splash-logo-in {
+  0%   { opacity: 0; transform: scale(0.92); filter: brightness(0.55); }
+  35%  { opacity: 1; transform: scale(1);    filter: brightness(0.85); }
+  65%  { filter: brightness(1.15); }
+  100% { opacity: 1; transform: scale(1);    filter: brightness(1); }
+}
+
+.launch-splash__sweep {
+  position: absolute; top: -20%; left: -120%; width: 60%; height: 140%;
+  background: linear-gradient(100deg, transparent 0%, oklch(1 0 0 / 0) 30%,
+    oklch(1 0 0 / 0.85) 50%, oklch(1 0 0 / 0) 70%, transparent 100%);
+  transform: skewX(-18deg); filter: blur(2px); opacity: 0;
+  animation: splash-sweep 1.6s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
+  pointer-events: none;
+}
+@keyframes splash-sweep {
+  0%   { left: -120%; opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { left: 120%;  opacity: 0; }
+}
+
+.launch-splash__wordmark {
+  position: relative; z-index: 2;
+  font-family: var(--font-display); font-weight: 700; font-size: 1.5rem;
+  letter-spacing: -0.02em; opacity: 0; transform: translateY(8px);
+  animation: splash-wordmark 1.6s cubic-bezier(0.22, 0.61, 0.36, 1) 0.7s forwards;
+}
+.launch-splash--light .launch-splash__wordmark { color: oklch(0.5 0.18 0); }
+.launch-splash--dark  .launch-splash__wordmark { color: oklch(0.95 0.05 350); }
+@keyframes splash-wordmark { to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .launch-splash__halo, .launch-splash__logo,
+  .launch-splash__sweep, .launch-splash__wordmark {
+    animation: none !important; opacity: 1 !important;
+    transform: none !important; filter: none !important;
+  }
 }
 
