@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Sparkles, Calendar, Heart, Activity, ArrowRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import logoUrl from "@/assets/cyclesense-logo.png";
 
 export const Route = createFileRoute("/")({
   component: Landing,
@@ -24,11 +23,11 @@ function Landing() {
       <header className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <img
-            src={logoUrl}
+            src="/icons/icon-192.png"
             alt="CycleSense logo"
             width={40}
             height={40}
-            className="h-10 w-10 rounded-2xl shadow-soft object-cover"
+            className="h-10 w-10 rounded-2xl shadow-soft"
           />
           <span className="font-display text-xl font-bold tracking-tight">CycleSense</span>
         </div>

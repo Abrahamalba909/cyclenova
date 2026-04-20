@@ -3,7 +3,6 @@ import { Home, Calendar, Activity, Sparkles, Users } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { AmbientScene } from "@/components/AmbientScene";
-import logoUrl from "@/assets/cyclesense-logo.png";
 
 const tabs = [
   { to: "/dashboard", label: "Home", icon: Home },
@@ -19,7 +18,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="relative min-h-screen bg-background">
       <AmbientScene />
       <header className="relative max-w-2xl mx-auto px-4 sm:px-6 pt-5 flex items-center gap-2.5">
-        <img src={logoUrl} alt="CycleSense" width={32} height={32} className="h-8 w-8 rounded-xl shadow-soft object-cover" />
+        <img src="/icons/icon-192.png" alt="CycleSense" width={32} height={32} className="h-8 w-8 rounded-xl shadow-soft" />
         <span className="font-display text-base font-bold tracking-tight">CycleSense</span>
       </header>
       <main className="relative max-w-2xl mx-auto pb-28 pt-3 px-4 sm:px-6">{children}</main>

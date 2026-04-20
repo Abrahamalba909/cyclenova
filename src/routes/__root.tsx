@@ -2,7 +2,6 @@ import { Outlet, createRootRoute, HeadContent, Scripts } from "@tanstack/react-r
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
-import { LaunchSplash } from "@/components/LaunchSplash";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -76,7 +75,6 @@ function RootComponent() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <LaunchSplash />
         <Outlet />
         <Toaster />
       </AuthProvider>

@@ -18,7 +18,7 @@ export const Route = createFileRoute("/settings")({
 
 function Settings() {
   const { user, loading, signOut } = useAuth();
-  const { theme, setTheme, ambientEnabled, setAmbientEnabled } = useTheme();
+  const { theme, setTheme } = useTheme();
   const { isPremium } = useSubscription();
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -99,13 +99,6 @@ function Settings() {
             className={`p-3 rounded-2xl border-2 transition-all flex items-center gap-2 ${theme === "dark" ? "border-primary bg-primary-soft" : "border-border"}`}>
             <Moon className="h-4 w-4" /> <span className="text-sm font-medium">Dark</span>
           </button>
-        </div>
-        <div className="flex items-center justify-between pt-2">
-          <div>
-            <p className="text-sm font-medium">Ambient background</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Animated illustration & particles. Disable to save battery.</p>
-          </div>
-          <Switch checked={ambientEnabled} onCheckedChange={setAmbientEnabled} />
         </div>
       </Section>
 
