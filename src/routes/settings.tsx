@@ -52,19 +52,28 @@ function Settings() {
     if (!user) return;
     setSaving(true);
     try {
-      const { error } = await supabase
+      const payload = {
+        display_name: name,
+        age,
+        cycle_length: cycleLength,
+        period_length: periodLength,
+        notifications_enabled: notifications,
+        email_notifications_enabled: emailNotifs,
+        intention,
+      };
+      const { data, error } = await supabase
         .from("profiles")
-        .update({
-          display_name: name,
-          age,
-          cycle_length: cycleLength,
-          period_length: periodLength,
-          notifications_enabled: notifications,
-          email_notifications_enabled: emailNotifs,
-          intention,
-        })
-        .eq("user_id", user.id);
+        .update(payload)
+        .eq("user_id", user.id)
+        .select()
+        .maybeSingle();
       if (error) throw error;
+      if (!data) throw new Error("Profile not found — please complete onboarding first.");
+      // Re-sync local state from the row that was actually persisted
+      setIntention(data.intention as typeof intention);
+      setCycleLength(data.cycle_length);
+      setPeriodLength(data.period_length);
+      setName(data.display_name ?? "");
       toast.success("Settings saved");
     } catch (e) {
       toast.error((e as Error).message);
