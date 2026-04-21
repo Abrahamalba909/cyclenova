@@ -423,3 +423,84 @@
 .ambient-static .ambient-character {
   display: none !important;
 }
+
+/* ============================================
+   Animated app icons — lightweight CSS micro-motion
+   Used in the bottom nav. All transform/opacity only.
+   ============================================ */
+
+.icon-pulse {
+  animation: icon-pulse 3.6s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform, filter;
+}
+@keyframes icon-pulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
+  50%      { transform: scale(1.08); filter: drop-shadow(0 0 6px oklch(0.7 0.18 350 / 0.55)); }
+}
+
+.icon-flip {
+  animation: icon-flip 6s ease-in-out infinite;
+  transform-origin: 30% 50%;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+@keyframes icon-flip {
+  0%, 70%, 100% { transform: rotateY(0deg); }
+  80%           { transform: rotateY(-22deg); }
+  90%           { transform: rotateY(8deg); }
+}
+
+.icon-halo {
+  position: relative;
+  display: inline-flex;
+}
+.icon-halo::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  background: conic-gradient(from 0deg,
+    oklch(0.7 0.18 350 / 0) 0deg,
+    oklch(0.7 0.18 350 / 0.55) 120deg,
+    oklch(0.55 0.18 310 / 0.55) 240deg,
+    oklch(0.7 0.18 350 / 0) 360deg);
+  filter: blur(3px);
+  animation: icon-halo-spin 5s linear infinite;
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: -1;
+}
+@keyframes icon-halo-spin {
+  to { transform: rotate(360deg); }
+}
+
+.icon-float {
+  animation: icon-float 4.4s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-2.5px); }
+}
+
+.icon-shake {
+  animation: icon-shake 0.6s ease-in-out;
+  transform-origin: top center;
+}
+@keyframes icon-shake {
+  0%, 100%   { transform: rotate(0); }
+  20%, 60%   { transform: rotate(-12deg); }
+  40%, 80%   { transform: rotate(10deg); }
+}
+
+/* Active nav item — soften the motion so the highlight reads clearly */
+.nav-active .icon-pulse,
+.nav-active .icon-flip,
+.nav-active .icon-float { animation-duration: 5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-pulse, .icon-flip, .icon-halo::before, .icon-float, .icon-shake {
+    animation: none !important;
+  }
+}
