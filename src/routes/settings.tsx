@@ -111,6 +111,20 @@ function Settings() {
             <Moon className="h-4 w-4" /> <span className="text-sm font-medium">Dark</span>
           </button>
         </div>
+        <div className="flex items-center justify-between pt-2">
+          <div className="flex items-start gap-2.5">
+            <div className="h-8 w-8 rounded-xl bg-primary-soft text-primary flex items-center justify-center shrink-0 mt-0.5">
+              <Wand2 className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-sm font-medium">Ambient background animation</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Phase-aware breathing scene. Turn off to save battery or reduce motion.
+              </p>
+            </div>
+          </div>
+          <Switch checked={ambientEnabled} onCheckedChange={setAmbientEnabled} />
+        </div>
       </Section>
 
       <Section icon={<User className="h-4 w-4" />} title="Profile">
