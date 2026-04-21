@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, User, Calendar as CalIcon, Bell, Heart, Moon, Sun, Crown, Gift, Users, Sparkles } from "lucide-react";
+import { LogOut, User, Calendar as CalIcon, Bell, Heart, Moon, Sun, Crown, Gift, Users, Sparkles, Wand2 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
+import { useAmbient } from "@/hooks/useAmbient";
 import { useSubscription } from "@/hooks/useSubscription";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/settings")({
 function Settings() {
   const { user, loading, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { enabled: ambientEnabled, setEnabled: setAmbientEnabled } = useAmbient();
   const { isPremium } = useSubscription();
   const navigate = useNavigate();
   const [name, setName] = useState("");
