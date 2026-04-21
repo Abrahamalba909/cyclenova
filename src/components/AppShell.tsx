@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import { AmbientScene } from "@/components/AmbientScene";
 
 const tabs = [
-  { to: "/dashboard", label: "Home", icon: Home },
-  { to: "/calendar", label: "Calendar", icon: Calendar },
-  { to: "/community", label: "Community", icon: Users },
-  { to: "/assistant", label: "AI", icon: Sparkles },
-  { to: "/insights", label: "Insights", icon: Activity },
+  { to: "/dashboard", label: "Home", icon: Home, motion: "icon-pulse" },
+  { to: "/calendar", label: "Calendar", icon: Calendar, motion: "icon-flip" },
+  { to: "/community", label: "Community", icon: Users, motion: "icon-float" },
+  { to: "/assistant", label: "AI", icon: Sparkles, motion: "icon-halo" },
+  { to: "/insights", label: "Insights", icon: Activity, motion: "icon-pulse" },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -34,10 +34,16 @@ export function AppShell({ children }: { children: ReactNode }) {
                   to={t.to}
                   className={cn(
                     "flex flex-col items-center justify-center gap-0.5 px-3 py-2 rounded-full transition-all",
-                    active ? "bg-gradient-primary text-primary-foreground shadow-soft" : "text-muted-foreground hover:text-foreground",
+                    active ? "nav-active bg-gradient-primary text-primary-foreground shadow-soft" : "text-muted-foreground hover:text-foreground",
                   )}
                 >
-                  <Icon className="h-5 w-5" />
+                  {t.motion === "icon-halo" ? (
+                    <span className="icon-halo">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                  ) : (
+                    <Icon className={cn("h-5 w-5", t.motion)} />
+                  )}
                   <span className="text-[10px] font-medium">{t.label}</span>
                 </Link>
               );
