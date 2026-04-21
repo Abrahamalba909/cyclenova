@@ -1,10 +1,12 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Droplet, Sparkles, Heart, Plus, Settings as SettingsIcon } from "lucide-react";
+import { Droplet, Plus, Settings as SettingsIcon, CalendarCog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/AppShell";
 import { PhaseRing } from "@/components/PhaseRing";
+import { OvulationCalculator } from "@/components/OvulationCalculator";
+import { EditPeriodDialog } from "@/components/EditPeriodDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { computeStats, fmt, phaseDescription, phaseLabel, type CycleProfile, type PeriodEntry } from "@/lib/cycle";
@@ -85,7 +87,8 @@ function Dashboard() {
       </div>
 
       {stats && (
-        <>
+        <div className="space-y-4">
+          {/* Current Cycle Status */}
           <div className="bg-card border rounded-3xl p-7 shadow-soft text-center">
             <PhaseRing
               cycleDay={stats.cycleDay}
@@ -95,61 +98,77 @@ function Dashboard() {
             />
             <div className="mt-6">
               <p className="font-display text-xl font-semibold">{phaseLabel[stats.currentPhase]}</p>
-              <p className="text-sm text-muted-foreground mt-1.5 max-w-sm mx-auto">{phaseDescription[stats.currentPhase]}</p>
+              <p className="text-sm text-muted-foreground mt-1.5 max-w-sm mx-auto">
+                {phaseDescription[stats.currentPhase]}
+              </p>
+            </div>
+
+            {/* Quick metrics inline */}
+            <div className="mt-5 grid grid-cols-3 gap-2 text-left">
+              <MetricPill label="Cycle day" value={`${stats.cycleDay}`} accent="var(--primary)" />
+              <MetricPill
+                label="Next period"
+                value={stats.daysUntilPeriod <= 0 ? "Likely" : `${stats.daysUntilPeriod}d`}
+                accent="var(--period)"
+              />
+              <MetricPill
+                label="Ovulation"
+                value={format(stats.ovulationDay, "MMM d")}
+                accent="var(--ovulation)"
+              />
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mt-4">
-            <StatCard
-              icon={<Sparkles className="h-4 w-4" />}
-              label="Ovulation"
-              value={format(stats.ovulationDay, "MMM d")}
-              accent="var(--ovulation)"
-            />
-            <StatCard
-              icon={<Heart className="h-4 w-4" fill="currentColor" />}
-              label="Fertile window"
-              value={`${format(stats.fertileWindow.start, "MMM d")}–${format(stats.fertileWindow.end, "d")}`}
-              accent="var(--fertile)"
-            />
-            <StatCard
-              icon={<Droplet className="h-4 w-4" />}
-              label="Next period"
-              value={format(stats.nextPeriodStart, "MMM d")}
-              accent="var(--period)"
-            />
-            <StatCard
-              icon={<Sparkles className="h-4 w-4" />}
-              label="Cycle length"
-              value={`${stats.averageCycleLength} days`}
-              accent="var(--primary)"
-            />
-          </div>
+          {/* Ovulation Calculator */}
+          <OvulationCalculator stats={stats} />
 
-          <div className="mt-4 bg-card border rounded-3xl p-5 shadow-soft">
-            <h3 className="font-display text-lg font-semibold mb-3">Quick log</h3>
+          {/* Quick log */}
+          <div className="bg-card border rounded-3xl p-5 shadow-soft">
+            <h3 className="font-display text-lg font-semibold mb-3">Quick actions</h3>
             <div className="flex gap-2 flex-wrap">
-              <Button onClick={logPeriodToday} disabled={logging} className="rounded-full bg-gradient-primary font-semibold">
+              <Button
+                onClick={logPeriodToday}
+                disabled={logging}
+                className="rounded-full bg-gradient-primary font-semibold"
+              >
                 <Droplet className="h-4 w-4 mr-1.5" /> Period started today
               </Button>
-              <Button variant="outline" className="rounded-full" onClick={() => navigate({ to: "/calendar" })}>
+              <Button
+                variant="outline"
+                className="rounded-full"
+                onClick={() => navigate({ to: "/calendar" })}
+              >
                 <Plus className="h-4 w-4 mr-1.5" /> Log symptoms
               </Button>
+              <EditPeriodDialog
+                userId={user!.id}
+                initial={{
+                  last_period_start: profile.last_period_start,
+                  period_length: profile.period_length,
+                  cycle_length: profile.cycle_length,
+                }}
+                onSaved={load}
+                trigger={
+                  <Button variant="outline" className="rounded-full">
+                    <CalendarCog className="h-4 w-4 mr-1.5" /> Edit period
+                  </Button>
+                }
+              />
             </div>
           </div>
-        </>
+        </div>
       )}
     </AppShell>
   );
 }
 
-function StatCard({ icon, label, value, accent }: { icon: React.ReactNode; label: string; value: string; accent: string }) {
+function MetricPill({ label, value, accent }: { label: string; value: string; accent: string }) {
   return (
-    <div className="bg-card border rounded-2xl p-4 shadow-soft">
-      <div className="flex items-center gap-2 text-xs font-medium" style={{ color: accent }}>
-        {icon} <span className="uppercase tracking-wider">{label}</span>
-      </div>
-      <p className="font-display text-xl font-semibold mt-2">{value}</p>
+    <div className="rounded-2xl border bg-background/40 p-2.5">
+      <p className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: accent }}>
+        {label}
+      </p>
+      <p className="font-display text-base font-bold mt-0.5 leading-none">{value}</p>
     </div>
   );
 }
