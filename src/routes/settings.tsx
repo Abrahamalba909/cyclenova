@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LogOut, User, Calendar as CalIcon, Bell, Heart, Moon, Sun, Crown, Gift, Users, Sparkles } from "lucide-react";
+import { LogOut, User, Calendar as CalIcon, Bell, Heart, Moon, Sun, Crown, Gift, Users, Sparkles, Wand2 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
+import { useAmbient } from "@/hooks/useAmbient";
 import { useSubscription } from "@/hooks/useSubscription";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/settings")({
 function Settings() {
   const { user, loading, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { enabled: ambientEnabled, setEnabled: setAmbientEnabled } = useAmbient();
   const { isPremium } = useSubscription();
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -108,6 +110,20 @@ function Settings() {
             className={`p-3 rounded-2xl border-2 transition-all flex items-center gap-2 ${theme === "dark" ? "border-primary bg-primary-soft" : "border-border"}`}>
             <Moon className="h-4 w-4" /> <span className="text-sm font-medium">Dark</span>
           </button>
+        </div>
+        <div className="flex items-center justify-between pt-2">
+          <div className="flex items-start gap-2.5">
+            <div className="h-8 w-8 rounded-xl bg-primary-soft text-primary flex items-center justify-center shrink-0 mt-0.5">
+              <Wand2 className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-sm font-medium">Ambient background animation</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Phase-aware breathing scene. Turn off to save battery or reduce motion.
+              </p>
+            </div>
+          </div>
+          <Switch checked={ambientEnabled} onCheckedChange={setAmbientEnabled} />
         </div>
       </Section>
 
