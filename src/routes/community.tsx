@@ -14,15 +14,15 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/community")({
   head: () => ({
     meta: [
-      { title: "Community — CycleSense" },
+      { title: "Community — CycleNova" },
       { name: "description", content: "Join anonymous discussions on cycles, PMS, fertility, and women's wellness in a safe, supportive community." },
-      { property: "og:title", content: "CycleSense Community — Anonymous women's health discussions" },
+      { property: "og:title", content: "CycleNova Community — Anonymous women's health discussions" },
       { property: "og:description", content: "Talk openly about cycles, PMS, fertility, and wellness with a supportive anonymous community." },
       { property: "og:image", content: "/og/community.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CycleSense Community" },
+      { name: "twitter:title", content: "CycleNova Community" },
       { name: "twitter:description", content: "Anonymous discussions on cycles, PMS, fertility, and wellness." },
       { name: "twitter:image", content: "/og/community.jpg" },
     ],

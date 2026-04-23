@@ -1,10 +1,10 @@
-// CycleSense AI Health Assistant - Lovable AI Gateway streaming
+// CycleNova AI Health Assistant - Lovable AI Gateway streaming
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const SYSTEM_PROMPT = `You are CycleSense's AI Health Assistant — a knowledgeable, supportive companion focused exclusively on women's reproductive and menstrual health.
+const SYSTEM_PROMPT = `You are CycleNova's AI Health Assistant — a knowledgeable, supportive companion focused exclusively on women's reproductive and menstrual health.
 
 TONE: Balanced — friendly and warm but medically grounded. Speak like a trusted, well-read friend who also respects evidence.
 

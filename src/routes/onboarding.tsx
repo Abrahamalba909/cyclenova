@@ -66,7 +66,7 @@ function Onboarding() {
   };
 
   const steps = [
-    { title: "Welcome to CycleSense", subtitle: "Let's personalize your experience in under a minute." },
+    { title: "Welcome to CycleNova", subtitle: "Let's personalize your experience in under a minute." },
     { title: "How old are you?", subtitle: "This helps us provide age-appropriate insights." },
     { title: "Average cycle length", subtitle: "From the first day of one period to the next. 28 is typical." },
     { title: "How long is your period?", subtitle: "The number of days you usually bleed." },
@@ -82,7 +82,7 @@ function Onboarding() {
         <div className="h-9 w-9 rounded-2xl bg-gradient-primary flex items-center justify-center">
           <Heart className="h-4 w-4 text-primary-foreground" fill="currentColor" />
         </div>
-        <span className="font-display font-bold">CycleSense</span>
+        <span className="font-display font-bold">CycleNova</span>
       </header>
 
       <div className="px-6 max-w-2xl mx-auto w-full">

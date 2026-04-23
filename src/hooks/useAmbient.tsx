@@ -24,7 +24,7 @@ const Ctx = createContext<AmbientCtx>({
   refresh: async () => {},
 });
 
-const STORAGE_KEY = "cyclesense-ambient-enabled";
+const STORAGE_KEY = "cyclenova-ambient-enabled";
 
 function mapPhase(p: Phase | undefined): AmbientPhase {
   if (p === "period") return "period";

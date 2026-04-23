@@ -14,15 +14,15 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/partner")({
   head: () => ({
     meta: [
-      { title: "Partner Mode — CycleSense" },
+      { title: "Partner Mode — CycleNova" },
       { name: "description", content: "Privately share your cycle phases, fertile window, and period predictions with your partner — you control what they see." },
-      { property: "og:title", content: "CycleSense Partner Mode — Share your cycle, your way" },
+      { property: "og:title", content: "CycleNova Partner Mode — Share your cycle, your way" },
       { property: "og:description", content: "Invite your partner to see exactly what you choose: period, ovulation, fertile window, or PMS." },
       { property: "og:image", content: "/og/partner.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CycleSense Partner Mode" },
+      { name: "twitter:title", content: "CycleNova Partner Mode" },
       { name: "twitter:description", content: "Privately share your cycle with your partner." },
       { name: "twitter:image", content: "/og/partner.jpg" },
     ],
