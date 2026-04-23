@@ -154,13 +154,26 @@ function Settings() {
         </Field>
         <Field label="Goal">
           <div className="grid grid-cols-3 gap-2">
-            {(["tracking", "conceive", "avoid"] as const).map((v) => (
-              <button key={v} onClick={() => setIntention(v)}
-                className={`p-2.5 rounded-xl border-2 text-xs font-semibold capitalize transition-all ${intention === v ? "border-primary bg-primary-soft text-primary" : "border-border"}`}>
-                {v === "conceive" ? "Conceive" : v === "avoid" ? "Avoid" : "Track"}
-              </button>
-            ))}
+            {(["tracking", "conceive", "avoid"] as const).map((v) => {
+              const active = goal === v;
+              return (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => handleGoalSelect(v)}
+                  aria-pressed={active}
+                  className={`p-3.5 rounded-2xl border-2 text-sm font-semibold transition-all ${
+                    active
+                      ? "border-primary bg-gradient-primary text-primary-foreground shadow-soft scale-[1.02]"
+                      : "border-border bg-card hover:border-primary/40"
+                  }`}
+                >
+                  {goalLabel[v]}
+                </button>
+              );
+            })}
           </div>
+          <p className="text-xs text-muted-foreground mt-2">{goalDescription[goal]}</p>
         </Field>
       </Section>
 
