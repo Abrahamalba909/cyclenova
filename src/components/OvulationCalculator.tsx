@@ -1,10 +1,12 @@
 import { format, isSameDay, differenceInCalendarDays } from "date-fns";
 import { Sparkles, Heart, Shield, Flame } from "lucide-react";
 import type { CycleStats } from "@/lib/cycle";
+import type { Goal } from "@/hooks/useGoal";
 
 interface Props {
   stats: CycleStats;
   today?: Date;
+  goal?: Goal;
 }
 
 type FertilityStatus = "high" | "ovulation" | "safe";
