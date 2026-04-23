@@ -19,7 +19,7 @@ export const Route = createFileRoute("/dashboard")({
 
 function Dashboard() {
   const { user, loading } = useAuth();
-  const { goal, setGoal } = useGoal();
+  const { goal, setGoal, saving: goalSaving } = useGoal();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<CycleProfile | null>(null);
   const [periods, setPeriods] = useState<PeriodEntry[]>([]);
@@ -27,7 +27,7 @@ function Dashboard() {
   const [logging, setLogging] = useState(false);
 
   const handleGoalChange = async (next: Goal) => {
-    if (next === goal) return;
+    if (next === goal || goalSaving) return; // lockout: ignore rapid taps while saving
     try {
       await setGoal(next);
       toast.success("Goal updated successfully");
