@@ -37,7 +37,7 @@ function AuthPage() {
           options: { emailRedirectTo: window.location.origin + "/onboarding" },
         });
         if (error) throw error;
-        toast.success("Welcome to CycleSense!");
+        toast.success("Welcome to CycleNova!");
         navigate({ to: "/onboarding" });
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -112,7 +112,7 @@ function AuthPage() {
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
-            {mode === "signup" ? "Already have an account? " : "New to CycleSense? "}
+            {mode === "signup" ? "Already have an account? " : "New to CycleNova? "}
             <button
               type="button"
               onClick={() => setMode(mode === "signup" ? "signin" : "signup")}

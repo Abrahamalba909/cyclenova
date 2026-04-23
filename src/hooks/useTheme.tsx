@@ -14,7 +14,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const stored = (localStorage.getItem("cyclesense-theme") as Theme | null) ?? "light";
+    const stored = (localStorage.getItem("cyclenova-theme") as Theme | null) ?? "light";
     setThemeState(stored);
     document.documentElement.classList.toggle("dark", stored === "dark");
   }, []);
@@ -22,7 +22,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const setTheme = (t: Theme) => {
     setThemeState(t);
     if (typeof window !== "undefined") {
-      localStorage.setItem("cyclesense-theme", t);
+      localStorage.setItem("cyclenova-theme", t);
       document.documentElement.classList.toggle("dark", t === "dark");
     }
   };

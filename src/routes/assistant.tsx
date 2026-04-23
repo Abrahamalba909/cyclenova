@@ -12,15 +12,15 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/assistant")({
   head: () => ({
     meta: [
-      { title: "AI Health Assistant — CycleSense" },
+      { title: "AI Health Assistant — CycleNova" },
       { name: "description", content: "Chat with an AI assistant trained on women's health: cycles, ovulation, PMS, fertility, and reproductive wellness." },
-      { property: "og:title", content: "CycleSense AI Health Assistant" },
+      { property: "og:title", content: "CycleNova AI Health Assistant" },
       { property: "og:description", content: "Get evidence-based answers on cycles, ovulation, PMS, fertility, and reproductive health — anytime." },
       { property: "og:image", content: "/og/assistant.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CycleSense AI Health Assistant" },
+      { name: "twitter:title", content: "CycleNova AI Health Assistant" },
       { name: "twitter:description", content: "Evidence-based answers on women's health, anytime." },
       { name: "twitter:image", content: "/og/assistant.jpg" },
     ],

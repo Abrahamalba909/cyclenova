@@ -11,15 +11,15 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/invite")({
   head: () => ({
     meta: [
-      { title: "Invite Friends — CycleSense" },
-      { name: "description", content: "Invite friends to CycleSense and unlock free Premium when they join. Share via link, email, or social." },
-      { property: "og:title", content: "Invite friends to CycleSense — earn free Premium" },
+      { title: "Invite Friends — CycleNova" },
+      { name: "description", content: "Invite friends to CycleNova and unlock free Premium when they join. Share via link, email, or social." },
+      { property: "og:title", content: "Invite friends to CycleNova — earn free Premium" },
       { property: "og:description", content: "Refer 3 friends and unlock a free month of Premium. Share via link, email, or social." },
       { property: "og:image", content: "/og/invite.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Invite friends to CycleSense" },
+      { name: "twitter:title", content: "Invite friends to CycleNova" },
       { name: "twitter:description", content: "Refer 3 friends and earn a free month of Premium." },
       { name: "twitter:image", content: "/og/invite.jpg" },
     ],
@@ -52,7 +52,7 @@ function InvitePage() {
   const copy = () => { navigator.clipboard.writeText(inviteUrl); toast.success("Link copied!"); };
   const share = async () => {
     if (navigator.share) {
-      try { await navigator.share({ title: "Join me on CycleSense", text: "I'm using CycleSense to track my cycle. Join me!", url: inviteUrl }); } catch { /* canceled */ }
+      try { await navigator.share({ title: "Join me on CycleNova", text: "I'm using CycleNova to track my cycle. Join me!", url: inviteUrl }); } catch { /* canceled */ }
     } else { copy(); }
   };
 
@@ -60,8 +60,8 @@ function InvitePage() {
     if (!user || !email.trim()) return;
     const { error } = await supabase.from("referrals").insert({ referrer_id: user.id, invitee_email: email.trim().toLowerCase() });
     if (error) { toast.error(error.message); return; }
-    const subject = encodeURIComponent("Join me on CycleSense");
-    const body = encodeURIComponent(`Hey! I've been using CycleSense to track my cycle and I love it. Join me here: ${inviteUrl}`);
+    const subject = encodeURIComponent("Join me on CycleNova");
+    const body = encodeURIComponent(`Hey! I've been using CycleNova to track my cycle and I love it. Join me here: ${inviteUrl}`);
     window.location.href = `mailto:${email.trim()}?subject=${subject}&body=${body}`;
     setEmail("");
     await load();

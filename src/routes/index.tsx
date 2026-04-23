@@ -24,12 +24,12 @@ function Landing() {
         <div className="flex items-center gap-2.5">
           <img
             src="/icons/icon-192.png"
-            alt="CycleSense logo"
+            alt="CycleNova logo"
             width={40}
             height={40}
             className="h-10 w-10 rounded-2xl shadow-soft"
           />
-          <span className="font-display text-xl font-bold tracking-tight">CycleSense</span>
+          <span className="font-display text-xl font-bold tracking-tight">CycleNova</span>
         </div>
         <Link to="/auth">
           <Button variant="ghost" className="rounded-full">Sign in</Button>
@@ -121,7 +121,7 @@ function Landing() {
         {[
           { icon: Calendar, title: "Smart predictions", body: "Adaptive algorithm learns your unique rhythm and predicts your next period and ovulation accurately." },
           { icon: Activity, title: "Symptom intelligence", body: "Track 10+ symptoms with simple sliders and uncover patterns across your cycle." },
-          { icon: Heart, title: "Built for you", body: "Whether you're tracking, conceiving, or avoiding — CycleSense adapts to your goals." },
+          { icon: Heart, title: "Built for you", body: "Whether you're tracking, conceiving, or avoiding — CycleNova adapts to your goals." },
         ].map((f, i) => (
           <motion.div
             key={f.title}
@@ -142,7 +142,7 @@ function Landing() {
 
       <footer className="border-t mt-12">
         <div className="max-w-6xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} CycleSense. Your data, your body, your control.</p>
+          <p>© {new Date().getFullYear()} CycleNova. Your data, your body, your control.</p>
           <p className="flex items-center gap-1.5"><Heart className="h-3.5 w-3.5 text-primary" fill="currentColor" /> Made with care</p>
         </div>
       </footer>

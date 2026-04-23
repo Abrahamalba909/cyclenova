@@ -11,15 +11,15 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/premium")({
   head: () => ({
     meta: [
-      { title: "Premium — CycleSense" },
-      { name: "description", content: "Unlock advanced predictions, partner mode, AI assistant, and detailed health insights with CycleSense Premium." },
-      { property: "og:title", content: "CycleSense Premium — Advanced cycle insights & AI" },
+      { title: "Premium — CycleNova" },
+      { name: "description", content: "Unlock advanced predictions, partner mode, AI assistant, and detailed health insights with CycleNova Premium." },
+      { property: "og:title", content: "CycleNova Premium — Advanced cycle insights & AI" },
       { property: "og:description", content: "Advanced predictions, partner mode, AI health assistant, and detailed insights — $5/month." },
       { property: "og:image", content: "/og/premium.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CycleSense Premium" },
+      { name: "twitter:title", content: "CycleNova Premium" },
       { name: "twitter:description", content: "Advanced predictions, partner mode, AI assistant — $5/month." },
       { name: "twitter:image", content: "/og/premium.jpg" },
     ],
@@ -74,7 +74,7 @@ function PremiumPage() {
         <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-gradient-primary text-primary-foreground mb-3 shadow-glow">
           <Crown className="h-6 w-6" />
         </div>
-        <h1 className="font-display text-3xl font-bold">CycleSense Premium</h1>
+        <h1 className="font-display text-3xl font-bold">CycleNova Premium</h1>
         <p className="text-sm text-muted-foreground mt-1.5 max-w-sm mx-auto">Unlock advanced predictions, AI guidance, and partner sharing.</p>
       </div>
 

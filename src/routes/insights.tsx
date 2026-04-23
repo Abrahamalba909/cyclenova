@@ -10,15 +10,15 @@ import { computeAverageCycleLength, computeRegularity, type PeriodEntry } from "
 export const Route = createFileRoute("/insights")({
   head: () => ({
     meta: [
-      { title: "Insights — CycleSense" },
+      { title: "Insights — CycleNova" },
       { name: "description", content: "Discover patterns in your cycle: average length, regularity, symptom trends, and personalized health insights." },
-      { property: "og:title", content: "CycleSense Insights — Patterns from your cycle" },
+      { property: "og:title", content: "CycleNova Insights — Patterns from your cycle" },
       { property: "og:description", content: "Average cycle length, regularity scores, and symptom trends — beautifully visualized." },
       { property: "og:image", content: "/og/insights.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CycleSense Insights" },
+      { name: "twitter:title", content: "CycleNova Insights" },
       { name: "twitter:description", content: "Cycle patterns, regularity, and symptom trends." },
       { name: "twitter:image", content: "/og/insights.jpg" },
     ],
