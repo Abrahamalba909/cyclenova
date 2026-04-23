@@ -23,7 +23,7 @@ function Settings() {
   const { theme, setTheme } = useTheme();
   const { enabled: ambientEnabled, setEnabled: setAmbientEnabled } = useAmbient();
   const { isPremium } = useSubscription();
-  const { goal, setGoal } = useGoal();
+  const { goal, setGoal, saving: goalSaving } = useGoal();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [age, setAge] = useState<number>(28);
@@ -83,7 +83,7 @@ function Settings() {
   };
 
   const handleGoalSelect = async (next: Goal) => {
-    if (next === goal) return;
+    if (next === goal || goalSaving) return; // lockout
     try {
       await setGoal(next);
       toast.success("Goal updated successfully");
@@ -162,7 +162,9 @@ function Settings() {
                   type="button"
                   onClick={() => handleGoalSelect(v)}
                   aria-pressed={active}
-                  className={`p-3.5 rounded-2xl border-2 text-sm font-semibold transition-all ${
+                  disabled={goalSaving}
+                  aria-busy={goalSaving}
+                  className={`p-3.5 rounded-2xl border-2 text-sm font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-70 ${
                     active
                       ? "border-primary bg-gradient-primary text-primary-foreground shadow-soft scale-[1.02]"
                       : "border-border bg-card hover:border-primary/40"
@@ -173,7 +175,9 @@ function Settings() {
               );
             })}
           </div>
-          <p className="text-xs text-muted-foreground mt-2">{goalDescription[goal]}</p>
+          <p className="text-xs text-muted-foreground mt-2">
+            {goalSaving ? "Saving your goal…" : goalDescription[goal]}
+          </p>
         </Field>
       </Section>
 
