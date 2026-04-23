@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { AmbientProvider } from "@/hooks/useAmbient";
+import { GoalProvider } from "@/hooks/useGoal";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -76,10 +77,12 @@ function RootComponent() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <AmbientProvider>
-          <Outlet />
-          <Toaster />
-        </AmbientProvider>
+        <GoalProvider>
+          <AmbientProvider>
+            <Outlet />
+            <Toaster />
+          </AmbientProvider>
+        </GoalProvider>
       </AuthProvider>
     </ThemeProvider>
   );

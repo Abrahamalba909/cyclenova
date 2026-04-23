@@ -1,13 +1,14 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Droplet, Plus, Settings as SettingsIcon, CalendarCog } from "lucide-react";
+import { Droplet, Plus, Settings as SettingsIcon, CalendarCog, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/AppShell";
 import { PhaseRing } from "@/components/PhaseRing";
 import { OvulationCalculator } from "@/components/OvulationCalculator";
 import { EditPeriodDialog } from "@/components/EditPeriodDialog";
 import { useAuth } from "@/hooks/useAuth";
+import { useGoal, goalLabel, type Goal } from "@/hooks/useGoal";
 import { supabase } from "@/integrations/supabase/client";
 import { computeStats, fmt, phaseDescription, phaseLabel, type CycleProfile, type PeriodEntry } from "@/lib/cycle";
 import { toast } from "sonner";
@@ -18,11 +19,24 @@ export const Route = createFileRoute("/dashboard")({
 
 function Dashboard() {
   const { user, loading } = useAuth();
+  const { goal, setGoal } = useGoal();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<CycleProfile | null>(null);
   const [periods, setPeriods] = useState<PeriodEntry[]>([]);
   const [name, setName] = useState<string>("");
   const [logging, setLogging] = useState(false);
+
+  const handleGoalChange = async (next: Goal) => {
+    if (next === goal) return;
+    try {
+      await setGoal(next);
+      toast.success("Goal updated successfully");
+    } catch (e) {
+      toast.error("Unable to save changes. Please try again.");
+      console.error(e);
+    }
+  };
+
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/auth" });
@@ -119,8 +133,44 @@ function Dashboard() {
             </div>
           </div>
 
+          {/* Your Goal */}
+          <div className="bg-card border rounded-3xl p-5 shadow-soft">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-xl bg-primary-soft text-primary flex items-center justify-center">
+                  <Target className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Your goal</p>
+                  <p className="font-display text-base font-bold leading-none mt-0.5">{goalLabel[goal]}</p>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {(["tracking", "conceive", "avoid"] as const).map((v) => {
+                const active = goal === v;
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => handleGoalChange(v)}
+                    aria-pressed={active}
+                    className={`p-3 rounded-2xl border-2 text-sm font-semibold transition-all ${
+                      active
+                        ? "border-primary bg-gradient-primary text-primary-foreground shadow-soft scale-[1.02]"
+                        : "border-border bg-background/40 hover:border-primary/40"
+                    }`}
+                  >
+                    {goalLabel[v]}
+                  </button>
+                );
+              })}
+            </div>
+            <GoalGuidance goal={goal} stats={stats} />
+          </div>
+
           {/* Ovulation Calculator */}
-          <OvulationCalculator stats={stats} />
+          <OvulationCalculator stats={stats} goal={goal} />
 
           {/* Quick log */}
           <div className="bg-card border rounded-3xl p-5 shadow-soft">
@@ -169,6 +219,68 @@ function MetricPill({ label, value, accent }: { label: string; value: string; ac
         {label}
       </p>
       <p className="font-display text-base font-bold mt-0.5 leading-none">{value}</p>
+    </div>
+  );
+}
+
+function GoalGuidance({ goal, stats }: { goal: Goal; stats: ReturnType<typeof computeStats> }) {
+  if (!stats) return null;
+
+  if (goal === "conceive") {
+    return (
+      <div
+        className="mt-4 rounded-2xl p-3.5"
+        style={{
+          background: "color-mix(in oklab, var(--period) 12%, transparent)",
+          border: "1px solid color-mix(in oklab, var(--period) 28%, transparent)",
+        }}
+      >
+        <p className="text-xs font-semibold" style={{ color: "var(--period)" }}>
+          High chance days
+        </p>
+        <p className="text-sm font-medium mt-1">
+          {format(stats.fertileWindow.start, "MMM d")} – {format(stats.fertileWindow.end, "MMM d")}
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Best timing for conception is around ovulation on {format(stats.ovulationDay, "MMM d")}.
+        </p>
+      </div>
+    );
+  }
+
+  if (goal === "avoid") {
+    return (
+      <div
+        className="mt-4 rounded-2xl p-3.5"
+        style={{
+          background: "color-mix(in oklab, oklch(0.7 0.14 150) 12%, transparent)",
+          border: "1px solid color-mix(in oklab, oklch(0.7 0.14 150) 28%, transparent)",
+        }}
+      >
+        <p className="text-xs font-semibold" style={{ color: "oklch(0.45 0.14 150)" }}>
+          Low risk days
+        </p>
+        <p className="text-sm font-medium mt-1">
+          Outside {format(stats.fertileWindow.start, "MMM d")} – {format(stats.fertileWindow.end, "MMM d")}
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Avoid unprotected intimacy during your fertile window for lowest pregnancy risk.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-4 rounded-2xl p-3.5 bg-background/40 border">
+      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        Cycle tracking
+      </p>
+      <p className="text-sm font-medium mt-1">
+        Day {stats.cycleDay} of {stats.averageCycleLength} — {phaseLabel[stats.currentPhase]}
+      </p>
+      <p className="text-xs text-muted-foreground mt-1">
+        Keep logging to refine your predictions and insights.
+      </p>
     </div>
   );
 }

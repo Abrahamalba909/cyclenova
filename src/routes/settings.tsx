@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { useAmbient } from "@/hooks/useAmbient";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useGoal, goalLabel, goalDescription, type Goal } from "@/hooks/useGoal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -22,6 +23,7 @@ function Settings() {
   const { theme, setTheme } = useTheme();
   const { enabled: ambientEnabled, setEnabled: setAmbientEnabled } = useAmbient();
   const { isPremium } = useSubscription();
+  const { goal, setGoal } = useGoal();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [age, setAge] = useState<number>(28);
@@ -29,7 +31,6 @@ function Settings() {
   const [periodLength, setPeriodLength] = useState<number>(5);
   const [notifications, setNotifications] = useState(true);
   const [emailNotifs, setEmailNotifs] = useState(true);
-  const [intention, setIntention] = useState<"conceive" | "avoid" | "tracking">("tracking");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => { if (!loading && !user) navigate({ to: "/auth" }); }, [user, loading, navigate]);
@@ -45,7 +46,6 @@ function Settings() {
         setPeriodLength(data.period_length);
         setNotifications(data.notifications_enabled);
         setEmailNotifs(data.email_notifications_enabled ?? true);
-        setIntention(data.intention as typeof intention);
       }
     })();
   }, [user]);
@@ -61,7 +61,6 @@ function Settings() {
         period_length: periodLength,
         notifications_enabled: notifications,
         email_notifications_enabled: emailNotifs,
-        intention,
       };
       const { data, error } = await supabase
         .from("profiles")
@@ -71,16 +70,26 @@ function Settings() {
         .maybeSingle();
       if (error) throw error;
       if (!data) throw new Error("Profile not found — please complete onboarding first.");
-      // Re-sync local state from the row that was actually persisted
-      setIntention(data.intention as typeof intention);
       setCycleLength(data.cycle_length);
       setPeriodLength(data.period_length);
       setName(data.display_name ?? "");
       toast.success("Settings saved");
     } catch (e) {
-      toast.error((e as Error).message);
+      toast.error("Unable to save changes. Please try again.");
+      console.error(e);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleGoalSelect = async (next: Goal) => {
+    if (next === goal) return;
+    try {
+      await setGoal(next);
+      toast.success("Goal updated successfully");
+    } catch (e) {
+      toast.error("Unable to save changes. Please try again.");
+      console.error(e);
     }
   };
 
@@ -145,13 +154,26 @@ function Settings() {
         </Field>
         <Field label="Goal">
           <div className="grid grid-cols-3 gap-2">
-            {(["tracking", "conceive", "avoid"] as const).map((v) => (
-              <button key={v} onClick={() => setIntention(v)}
-                className={`p-2.5 rounded-xl border-2 text-xs font-semibold capitalize transition-all ${intention === v ? "border-primary bg-primary-soft text-primary" : "border-border"}`}>
-                {v === "conceive" ? "Conceive" : v === "avoid" ? "Avoid" : "Track"}
-              </button>
-            ))}
+            {(["tracking", "conceive", "avoid"] as const).map((v) => {
+              const active = goal === v;
+              return (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => handleGoalSelect(v)}
+                  aria-pressed={active}
+                  className={`p-3.5 rounded-2xl border-2 text-sm font-semibold transition-all ${
+                    active
+                      ? "border-primary bg-gradient-primary text-primary-foreground shadow-soft scale-[1.02]"
+                      : "border-border bg-card hover:border-primary/40"
+                  }`}
+                >
+                  {goalLabel[v]}
+                </button>
+              );
+            })}
           </div>
+          <p className="text-xs text-muted-foreground mt-2">{goalDescription[goal]}</p>
         </Field>
       </Section>
 
