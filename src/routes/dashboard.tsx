@@ -19,11 +19,24 @@ export const Route = createFileRoute("/dashboard")({
 
 function Dashboard() {
   const { user, loading } = useAuth();
+  const { goal, setGoal } = useGoal();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<CycleProfile | null>(null);
   const [periods, setPeriods] = useState<PeriodEntry[]>([]);
   const [name, setName] = useState<string>("");
   const [logging, setLogging] = useState(false);
+
+  const handleGoalChange = async (next: Goal) => {
+    if (next === goal) return;
+    try {
+      await setGoal(next);
+      toast.success("Goal updated successfully");
+    } catch (e) {
+      toast.error("Unable to save changes. Please try again.");
+      console.error(e);
+    }
+  };
+
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/auth" });
