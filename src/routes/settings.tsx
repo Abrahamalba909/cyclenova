@@ -11,6 +11,8 @@ import { useTheme } from "@/hooks/useTheme";
 import { useAmbient } from "@/hooks/useAmbient";
 import { useSubscription } from "@/hooks/useSubscription";
 import { useGoal, goalLabel, goalDescription, type Goal } from "@/hooks/useGoal";
+import { buildNotification, NOTIFICATION_KIND_LABELS, type NotificationKind } from "@/lib/notifications";
+import { addDays } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -240,6 +242,49 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     <div>
       <Label className="text-sm">{label}</Label>
       <div className="mt-1.5">{children}</div>
+    </div>
+  );
+}
+
+function NotificationPreview({ goal }: { goal: Goal }) {
+  // Build a representative future-dated cycle stats object for previewing.
+  const today = new Date();
+  const stats = {
+    cycleDay: 12,
+    daysUntilPeriod: 16,
+    nextPeriodStart: addDays(today, 16),
+    ovulationDay: addDays(today, 2),
+    fertileWindow: { start: addDays(today, -3), end: addDays(today, 3) },
+    pmsStart: addDays(today, 11),
+    currentPhase: "fertile" as const,
+    averageCycleLength: 28,
+    regularity: "regular" as const,
+  };
+
+  const kinds: NotificationKind[] = ["fertile_window_open", "ovulation_today", "period_upcoming"];
+
+  return (
+    <div className="pt-3 border-t mt-2">
+      <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-2">
+        Preview · {goalLabel[goal]}
+      </p>
+      <div className="space-y-2">
+        {kinds.map((k) => {
+          const n = buildNotification(k, goal, stats);
+          return (
+            <div key={k} className="rounded-2xl border bg-background/40 p-3">
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                {NOTIFICATION_KIND_LABELS[k]}
+              </p>
+              <p className="text-sm font-semibold mt-0.5">{n.title}</p>
+              <p className="text-xs text-muted-foreground mt-0.5 leading-snug">{n.body}</p>
+            </div>
+          );
+        })}
+      </div>
+      <p className="text-[10px] text-muted-foreground mt-2">
+        Push messages adapt automatically to your selected goal.
+      </p>
     </div>
   );
 }
