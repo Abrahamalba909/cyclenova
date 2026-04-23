@@ -322,12 +322,12 @@
 
 .ambient-vignette-light {
   background:
-    linear-gradient(180deg, oklch(1 0 0 / 0.45) 0%, transparent 22%, transparent 60%, oklch(1 0 0 / 0.35) 100%);
+    linear-gradient(180deg, oklch(1 0 0 / 0.18) 0%, transparent 28%, transparent 72%, oklch(1 0 0 / 0.18) 100%);
 }
 
 .ambient-vignette-dark {
   background:
-    linear-gradient(180deg, oklch(0.1 0.03 340 / 0.6) 0%, transparent 22%, transparent 55%, oklch(0.1 0.03 340 / 0.55) 100%);
+    linear-gradient(180deg, oklch(0.1 0.03 340 / 0.35) 0%, transparent 28%, transparent 70%, oklch(0.1 0.03 340 / 0.35) 100%);
 }
 
 /* Reduced motion — pause all ambient animations */
@@ -341,7 +341,7 @@
 
 /* On very small screens, slightly fade the character so cards stay readable */
 @media (max-width: 380px) {
-  .ambient-character { opacity: 0.78; }
+  .ambient-character { opacity: 0.4; }
 }
 
 
