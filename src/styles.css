@@ -281,20 +281,21 @@
 .ambient-character {
   position: absolute;
   bottom: 0;
-  right: -8%;
-  width: min(78vw, 520px);
-  max-width: 78vw;
+  right: -4%;
+  width: min(92vw, 640px);
+  max-width: 92vw;
   pointer-events: none;
   will-change: transform;
   animation: ambient-breath 7s ease-in-out infinite;
   /* Soft warmth glow behind character */
-  filter: drop-shadow(0 0 60px oklch(0.7 0.18 350 / 0.25));
-  opacity: 0.92;
+  filter: drop-shadow(0 0 60px oklch(0.7 0.18 350 / 0.3));
+  opacity: 0.45;
+  mix-blend-mode: normal;
 }
 
 .dark .ambient-character {
-  filter: drop-shadow(0 0 80px oklch(0.55 0.22 340 / 0.45));
-  opacity: 0.88;
+  filter: drop-shadow(0 0 80px oklch(0.55 0.22 340 / 0.5));
+  opacity: 0.42;
 }
 
 .ambient-character img {
