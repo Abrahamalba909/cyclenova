@@ -35,6 +35,20 @@ function Onboarding() {
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
 
+  // Persist goal immediately on selection so it's saved right after signup,
+  // even if the user navigates away before tapping "Finish".
+  const selectIntention = async (next: Intention) => {
+    setIntention(next);
+    if (!user) return;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ intention: next })
+      .eq("user_id", user.id);
+    if (error) {
+      toast.error("Unable to save changes. Please try again.");
+    }
+  };
+
   const finish = async () => {
     if (!user) return;
     setSaving(true);
@@ -137,6 +151,9 @@ function Onboarding() {
                 )}
                 {step === 5 && (
                   <div className="space-y-3">
+                    <p className="text-xs text-muted-foreground -mt-2">
+                      Default: <span className="font-medium text-foreground">Just tracking</span>. You can change this anytime.
+                    </p>
                     {([
                       { v: "tracking", t: "Just tracking", d: "I want to understand my body better." },
                       { v: "conceive", t: "Trying to conceive", d: "Help me identify my fertile window." },
@@ -144,7 +161,7 @@ function Onboarding() {
                     ] as const).map((opt) => (
                       <button
                         key={opt.v}
-                        onClick={() => setIntention(opt.v)}
+                        onClick={() => selectIntention(opt.v)}
                         className={`w-full text-left p-4 rounded-2xl border-2 transition-all ${
                           intention === opt.v ? "border-primary bg-primary-soft" : "border-border hover:border-foreground/20"
                         }`}

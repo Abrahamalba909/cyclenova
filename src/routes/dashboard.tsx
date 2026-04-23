@@ -19,7 +19,7 @@ export const Route = createFileRoute("/dashboard")({
 
 function Dashboard() {
   const { user, loading } = useAuth();
-  const { goal, setGoal } = useGoal();
+  const { goal, setGoal, saving: goalSaving } = useGoal();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<CycleProfile | null>(null);
   const [periods, setPeriods] = useState<PeriodEntry[]>([]);
@@ -27,7 +27,7 @@ function Dashboard() {
   const [logging, setLogging] = useState(false);
 
   const handleGoalChange = async (next: Goal) => {
-    if (next === goal) return;
+    if (next === goal || goalSaving) return; // lockout: ignore rapid taps while saving
     try {
       await setGoal(next);
       toast.success("Goal updated successfully");
@@ -149,16 +149,21 @@ function Dashboard() {
             <div className="grid grid-cols-3 gap-2">
               {(["tracking", "conceive", "avoid"] as const).map((v) => {
                 const active = goal === v;
+                const isPending = goalSaving && !active;
                 return (
                   <button
                     key={v}
                     type="button"
                     onClick={() => handleGoalChange(v)}
                     aria-pressed={active}
-                    className={`p-3 rounded-2xl border-2 text-sm font-semibold transition-all ${
+                    disabled={goalSaving}
+                    aria-busy={goalSaving}
+                    className={`p-3 rounded-2xl border-2 text-sm font-semibold transition-all disabled:cursor-not-allowed ${
                       active
                         ? "border-primary bg-gradient-primary text-primary-foreground shadow-soft scale-[1.02]"
-                        : "border-border bg-background/40 hover:border-primary/40"
+                        : isPending
+                          ? "border-border bg-background/40 opacity-60"
+                          : "border-border bg-background/40 hover:border-primary/40"
                     }`}
                   >
                     {goalLabel[v]}
@@ -166,6 +171,9 @@ function Dashboard() {
                 );
               })}
             </div>
+            {goalSaving && (
+              <p className="text-[11px] text-muted-foreground mt-2 text-center">Saving your goal…</p>
+            )}
             <GoalGuidance goal={goal} stats={stats} />
           </div>
 

@@ -20,6 +20,8 @@ interface GoalContextValue {
   goal: Goal;
   setGoal: (g: Goal) => Promise<void>;
   loading: boolean;
+  /** True while a goal change is in flight — use to lock out rapid taps. */
+  saving: boolean;
 }
 
 const GoalContext = createContext<GoalContextValue | undefined>(undefined);
@@ -28,6 +30,7 @@ export function GoalProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const [goal, setGoalState] = useState<Goal>("tracking");
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   // Load from DB whenever user changes
   useEffect(() => {
@@ -57,25 +60,33 @@ export function GoalProvider({ children }: { children: ReactNode }) {
 
   const setGoal = useCallback(
     async (next: Goal) => {
+      // Lockout: ignore rapid taps while a save is in flight.
+      if (saving) return;
+      if (next === goal) return;
       const previous = goal;
+      setSaving(true);
       // Optimistic update — instant UI everywhere
       setGoalState(next);
-      if (!user) return;
-      const { error } = await supabase
-        .from("profiles")
-        .update({ intention: next })
-        .eq("user_id", user.id);
-      if (error) {
-        // Roll back on failure
-        setGoalState(previous);
-        throw error;
+      try {
+        if (!user) return;
+        const { error } = await supabase
+          .from("profiles")
+          .update({ intention: next })
+          .eq("user_id", user.id);
+        if (error) {
+          // Roll back on failure
+          setGoalState(previous);
+          throw error;
+        }
+      } finally {
+        setSaving(false);
       }
     },
-    [user, goal],
+    [user, goal, saving],
   );
 
   return (
-    <GoalContext.Provider value={{ goal, setGoal, loading }}>
+    <GoalContext.Provider value={{ goal, setGoal, loading, saving }}>
       {children}
     </GoalContext.Provider>
   );
