@@ -35,6 +35,20 @@ function Onboarding() {
   const next = () => setStep((s) => s + 1);
   const back = () => setStep((s) => Math.max(0, s - 1));
 
+  // Persist goal immediately on selection so it's saved right after signup,
+  // even if the user navigates away before tapping "Finish".
+  const selectIntention = async (next: Intention) => {
+    setIntention(next);
+    if (!user) return;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ intention: next })
+      .eq("user_id", user.id);
+    if (error) {
+      toast.error("Unable to save changes. Please try again.");
+    }
+  };
+
   const finish = async () => {
     if (!user) return;
     setSaving(true);
