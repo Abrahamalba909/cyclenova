@@ -47,11 +47,18 @@ const statusMeta: Record<
   },
 };
 
-export function OvulationCalculator({ stats, today = new Date() }: Props) {
+export function OvulationCalculator({ stats, today = new Date(), goal = "tracking" }: Props) {
   const status = getStatus(today, stats);
   const meta = statusMeta[status];
   const Icon = meta.icon;
   const daysToOvulation = differenceInCalendarDays(stats.ovulationDay, today);
+
+  const goalBanner =
+    goal === "conceive"
+      ? { text: "Trying to conceive — fertile days are highlighted.", color: "var(--period)" }
+      : goal === "avoid"
+        ? { text: "Avoiding pregnancy — safe days are highlighted.", color: "oklch(0.45 0.14 150)" }
+        : null;
 
   return (
     <section
@@ -71,6 +78,19 @@ export function OvulationCalculator({ stats, today = new Date() }: Props) {
           {stats.averageCycleLength}-day cycle
         </span>
       </div>
+
+      {goalBanner && (
+        <div
+          className="mb-3 rounded-xl px-3 py-2 text-xs font-medium"
+          style={{
+            background: `color-mix(in oklab, ${goalBanner.color} 12%, transparent)`,
+            color: goalBanner.color,
+            border: `1px solid color-mix(in oklab, ${goalBanner.color} 30%, transparent)`,
+          }}
+        >
+          {goalBanner.text}
+        </div>
+      )}
 
       {/* Hero status pill */}
       <div
