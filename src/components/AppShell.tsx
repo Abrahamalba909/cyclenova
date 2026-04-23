@@ -15,13 +15,13 @@ const tabs = [
 export function AppShell({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen">
       <AmbientScene />
-      <header className="relative max-w-2xl mx-auto px-4 sm:px-6 pt-5 flex items-center gap-2.5">
+      <header className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 pt-5 flex items-center gap-2.5">
         <img src="/icons/icon-192.png" alt="CycleNova" width={32} height={32} className="h-8 w-8 rounded-xl shadow-soft" />
         <span className="font-display text-base font-bold tracking-tight">CycleNova</span>
       </header>
-      <main className="relative max-w-2xl mx-auto pb-28 pt-3 px-4 sm:px-6">{children}</main>
+      <main className="relative z-10 max-w-2xl mx-auto pb-28 pt-3 px-4 sm:px-6">{children}</main>
       <nav className="fixed bottom-0 inset-x-0 z-40">
         <div className="max-w-2xl mx-auto px-3 pb-4">
           <div className="bg-card/95 backdrop-blur-xl border rounded-full shadow-glow flex items-center justify-around p-2">

@@ -62,7 +62,8 @@ export function AmbientScene() {
     return (
       <div
         aria-hidden="true"
-        className={`ambient-scene ambient-static ${phaseClass} fixed inset-0 -z-10 overflow-hidden pointer-events-none`}
+        className={`ambient-scene ambient-static ${phaseClass} fixed inset-0 overflow-hidden pointer-events-none`}
+        style={{ zIndex: 0 }}
       >
         <div className={isDark ? "ambient-wash-dark" : "ambient-wash-light"} />
       </div>
@@ -72,7 +73,8 @@ export function AmbientScene() {
   return (
     <div
       aria-hidden="true"
-      className={`ambient-scene ${phaseClass} fixed inset-0 -z-10 overflow-hidden pointer-events-none`}
+      className={`ambient-scene ${phaseClass} fixed inset-0 overflow-hidden pointer-events-none`}
+      style={{ zIndex: 0 }}
     >
       {/* Theme + phase tinted base wash */}
       <div className={isDark ? "ambient-wash-dark" : "ambient-wash-light"} />

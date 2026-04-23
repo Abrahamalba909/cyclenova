@@ -57,7 +57,7 @@
   --background: oklch(1 0 0);
   --foreground: oklch(0.15 0.02 340);
 
-  --card: oklch(1 0 0);
+  --card: oklch(1 0 0 / 0.85);
   --card-foreground: oklch(0.15 0.02 340);
 
   --popover: oklch(1 0 0);
@@ -68,10 +68,10 @@
   --primary-foreground: oklch(1 0 0);
   --primary-soft: oklch(0.95 0.04 350);
 
-  --secondary: oklch(0.97 0.01 340);
+  --secondary: oklch(0.97 0.01 340 / 0.85);
   --secondary-foreground: oklch(0.15 0.02 340);
 
-  --muted: oklch(0.97 0.005 340);
+  --muted: oklch(0.97 0.005 340 / 0.85);
   --muted-foreground: oklch(0.5 0.02 340);
 
   --accent: oklch(0.95 0.04 350);
@@ -98,7 +98,7 @@
 
   --gradient-hero: linear-gradient(135deg, oklch(0.95 0.04 350) 0%, oklch(0.98 0.02 340) 50%, oklch(1 0 0) 100%);
   --gradient-primary: linear-gradient(135deg, oklch(0.5 0.18 0), oklch(0.55 0.18 350));
-  --gradient-card: linear-gradient(180deg, oklch(1 0 0), oklch(0.98 0.02 340));
+  --gradient-card: linear-gradient(180deg, oklch(1 0 0 / 0.9), oklch(0.98 0.02 340 / 0.85));
   --shadow-soft: 0 4px 20px -4px oklch(0.5 0.18 0 / 0.12);
   --shadow-glow: 0 8px 40px -8px oklch(0.5 0.18 0 / 0.25);
 }
@@ -106,16 +106,16 @@
 .dark {
   --background: oklch(0.12 0.02 340);
   --foreground: oklch(0.97 0.01 340);
-  --card: oklch(0.16 0.02 340);
+  --card: oklch(0.16 0.02 340 / 0.7);
   --card-foreground: oklch(0.97 0.01 340);
   --popover: oklch(0.16 0.02 340);
   --popover-foreground: oklch(0.97 0.01 340);
   --primary: oklch(0.65 0.2 0);
   --primary-foreground: oklch(0.12 0.02 340);
   --primary-soft: oklch(0.25 0.06 350);
-  --secondary: oklch(0.22 0.02 340);
+  --secondary: oklch(0.22 0.02 340 / 0.7);
   --secondary-foreground: oklch(0.97 0.01 340);
-  --muted: oklch(0.22 0.02 340);
+  --muted: oklch(0.22 0.02 340 / 0.7);
   --muted-foreground: oklch(0.7 0.02 340);
   --accent: oklch(0.25 0.06 350);
   --accent-foreground: oklch(0.97 0.01 340);
@@ -281,20 +281,21 @@
 .ambient-character {
   position: absolute;
   bottom: 0;
-  right: -8%;
-  width: min(78vw, 520px);
-  max-width: 78vw;
+  right: -4%;
+  width: min(92vw, 640px);
+  max-width: 92vw;
   pointer-events: none;
   will-change: transform;
   animation: ambient-breath 7s ease-in-out infinite;
   /* Soft warmth glow behind character */
-  filter: drop-shadow(0 0 60px oklch(0.7 0.18 350 / 0.25));
-  opacity: 0.92;
+  filter: drop-shadow(0 0 60px oklch(0.7 0.18 350 / 0.3));
+  opacity: 0.45;
+  mix-blend-mode: normal;
 }
 
 .dark .ambient-character {
-  filter: drop-shadow(0 0 80px oklch(0.55 0.22 340 / 0.45));
-  opacity: 0.88;
+  filter: drop-shadow(0 0 80px oklch(0.55 0.22 340 / 0.5));
+  opacity: 0.42;
 }
 
 .ambient-character img {
@@ -321,12 +322,12 @@
 
 .ambient-vignette-light {
   background:
-    linear-gradient(180deg, oklch(1 0 0 / 0.45) 0%, transparent 22%, transparent 60%, oklch(1 0 0 / 0.35) 100%);
+    linear-gradient(180deg, oklch(1 0 0 / 0.18) 0%, transparent 28%, transparent 72%, oklch(1 0 0 / 0.18) 100%);
 }
 
 .ambient-vignette-dark {
   background:
-    linear-gradient(180deg, oklch(0.1 0.03 340 / 0.6) 0%, transparent 22%, transparent 55%, oklch(0.1 0.03 340 / 0.55) 100%);
+    linear-gradient(180deg, oklch(0.1 0.03 340 / 0.35) 0%, transparent 28%, transparent 70%, oklch(0.1 0.03 340 / 0.35) 100%);
 }
 
 /* Reduced motion — pause all ambient animations */
@@ -340,7 +341,7 @@
 
 /* On very small screens, slightly fade the character so cards stay readable */
 @media (max-width: 380px) {
-  .ambient-character { opacity: 0.78; }
+  .ambient-character { opacity: 0.4; }
 }
 
 
