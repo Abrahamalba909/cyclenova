@@ -196,6 +196,8 @@ function Settings() {
           </div>
           <Switch checked={emailNotifs} onCheckedChange={setEmailNotifs} />
         </div>
+
+        <NotificationPreview goal={goal} />
       </Section>
 
       <Button onClick={save} disabled={saving} className="w-full mt-6 h-12 rounded-full bg-gradient-primary font-semibold shadow-soft">
