@@ -1,13 +1,14 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Droplet, Plus, Settings as SettingsIcon, CalendarCog } from "lucide-react";
+import { Droplet, Plus, Settings as SettingsIcon, CalendarCog, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/AppShell";
 import { PhaseRing } from "@/components/PhaseRing";
 import { OvulationCalculator } from "@/components/OvulationCalculator";
 import { EditPeriodDialog } from "@/components/EditPeriodDialog";
 import { useAuth } from "@/hooks/useAuth";
+import { useGoal, goalLabel, type Goal } from "@/hooks/useGoal";
 import { supabase } from "@/integrations/supabase/client";
 import { computeStats, fmt, phaseDescription, phaseLabel, type CycleProfile, type PeriodEntry } from "@/lib/cycle";
 import { toast } from "sonner";
