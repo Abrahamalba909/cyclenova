@@ -222,3 +222,65 @@ function MetricPill({ label, value, accent }: { label: string; value: string; ac
     </div>
   );
 }
+
+function GoalGuidance({ goal, stats }: { goal: Goal; stats: ReturnType<typeof computeStats> }) {
+  if (!stats) return null;
+
+  if (goal === "conceive") {
+    return (
+      <div
+        className="mt-4 rounded-2xl p-3.5"
+        style={{
+          background: "color-mix(in oklab, var(--period) 12%, transparent)",
+          border: "1px solid color-mix(in oklab, var(--period) 28%, transparent)",
+        }}
+      >
+        <p className="text-xs font-semibold" style={{ color: "var(--period)" }}>
+          High chance days
+        </p>
+        <p className="text-sm font-medium mt-1">
+          {format(stats.fertileWindow.start, "MMM d")} – {format(stats.fertileWindow.end, "MMM d")}
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Best timing for conception is around ovulation on {format(stats.ovulationDay, "MMM d")}.
+        </p>
+      </div>
+    );
+  }
+
+  if (goal === "avoid") {
+    return (
+      <div
+        className="mt-4 rounded-2xl p-3.5"
+        style={{
+          background: "color-mix(in oklab, oklch(0.7 0.14 150) 12%, transparent)",
+          border: "1px solid color-mix(in oklab, oklch(0.7 0.14 150) 28%, transparent)",
+        }}
+      >
+        <p className="text-xs font-semibold" style={{ color: "oklch(0.45 0.14 150)" }}>
+          Low risk days
+        </p>
+        <p className="text-sm font-medium mt-1">
+          Outside {format(stats.fertileWindow.start, "MMM d")} – {format(stats.fertileWindow.end, "MMM d")}
+        </p>
+        <p className="text-xs text-muted-foreground mt-1">
+          Avoid unprotected intimacy during your fertile window for lowest pregnancy risk.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-4 rounded-2xl p-3.5 bg-background/40 border">
+      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        Cycle tracking
+      </p>
+      <p className="text-sm font-medium mt-1">
+        Day {stats.cycleDay} of {stats.averageCycleLength} — {phaseLabel[stats.currentPhase]}
+      </p>
+      <p className="text-xs text-muted-foreground mt-1">
+        Keep logging to refine your predictions and insights.
+      </p>
+    </div>
+  );
+}
