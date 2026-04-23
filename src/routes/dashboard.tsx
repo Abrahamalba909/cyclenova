@@ -133,8 +133,44 @@ function Dashboard() {
             </div>
           </div>
 
+          {/* Your Goal */}
+          <div className="bg-card border rounded-3xl p-5 shadow-soft">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-xl bg-primary-soft text-primary flex items-center justify-center">
+                  <Target className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Your goal</p>
+                  <p className="font-display text-base font-bold leading-none mt-0.5">{goalLabel[goal]}</p>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {(["tracking", "conceive", "avoid"] as const).map((v) => {
+                const active = goal === v;
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => handleGoalChange(v)}
+                    aria-pressed={active}
+                    className={`p-3 rounded-2xl border-2 text-sm font-semibold transition-all ${
+                      active
+                        ? "border-primary bg-gradient-primary text-primary-foreground shadow-soft scale-[1.02]"
+                        : "border-border bg-background/40 hover:border-primary/40"
+                    }`}
+                  >
+                    {goalLabel[v]}
+                  </button>
+                );
+              })}
+            </div>
+            <GoalGuidance goal={goal} stats={stats} />
+          </div>
+
           {/* Ovulation Calculator */}
-          <OvulationCalculator stats={stats} />
+          <OvulationCalculator stats={stats} goal={goal} />
 
           {/* Quick log */}
           <div className="bg-card border rounded-3xl p-5 shadow-soft">
