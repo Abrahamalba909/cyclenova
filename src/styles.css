@@ -505,3 +505,109 @@
     animation: none !important;
   }
 }
+
+/* ========================================================================
+   Splash screen — premium animated launch
+   ======================================================================== */
+.splash-root {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+}
+
+.splash-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 30%, oklch(0.92 0.07 340) 0%, oklch(0.82 0.12 350) 45%, oklch(0.55 0.19 350) 100%);
+  z-index: -2;
+}
+
+.dark .splash-bg {
+  background:
+    radial-gradient(ellipse at 50% 30%, oklch(0.32 0.10 350) 0%, oklch(0.18 0.06 340) 55%, oklch(0.10 0.03 340) 100%);
+}
+
+.splash-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 520px;
+  height: 520px;
+  transform: translate(-50%, -55%);
+  background: radial-gradient(circle, oklch(0.75 0.18 350 / 0.55) 0%, transparent 65%);
+  filter: blur(40px);
+  z-index: -1;
+  animation: splash-breath 2.4s ease-in-out infinite;
+}
+
+.dark .splash-glow {
+  background: radial-gradient(circle, oklch(0.55 0.22 350 / 0.7) 0%, transparent 60%);
+}
+
+@keyframes splash-breath {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -55%) scale(1); }
+  50%      { opacity: 1;   transform: translate(-50%, -55%) scale(1.08); }
+}
+
+.splash-logo-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 38px;
+  overflow: hidden;
+  box-shadow:
+    0 30px 80px -20px oklch(0.45 0.20 350 / 0.55),
+    0 0 60px oklch(0.75 0.18 350 / 0.45);
+}
+
+.splash-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.splash-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    oklch(1 0 0 / 0) 20%,
+    oklch(1 0 0 / 0.55) 50%,
+    oklch(1 0 0 / 0) 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.splash-wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: -0.01em;
+  color: oklch(0.25 0.06 340);
+  text-shadow: 0 2px 20px oklch(1 0 0 / 0.4);
+}
+
+.dark .splash-wordmark {
+  color: oklch(0.96 0.02 340);
+  text-shadow: 0 0 24px oklch(0.65 0.22 350 / 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-glow { animation: none; }
+}

@@ -23,7 +23,7 @@ function Landing() {
       <header className="max-w-6xl mx-auto px-6 py-6 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <img
-            src="/icons/icon-192.png"
+            src="/icons/icon-192.png?v=2"
             alt="CycleNova logo"
             width={40}
             height={40}
