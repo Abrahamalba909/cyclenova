@@ -4,6 +4,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { AmbientProvider } from "@/hooks/useAmbient";
 import { GoalProvider } from "@/hooks/useGoal";
+import { SplashScreen } from "@/components/SplashScreen";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -79,6 +80,7 @@ function RootComponent() {
       <AuthProvider>
         <GoalProvider>
           <AmbientProvider>
+            <SplashScreen />
             <Outlet />
             <Toaster />
           </AmbientProvider>
