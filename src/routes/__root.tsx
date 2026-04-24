@@ -106,6 +106,7 @@ function RootComponent() {
         <GoalProvider>
           <AmbientProvider>
             <SplashScreen />
+            <PWAInstall />
             <Outlet />
             <Toaster />
           </AmbientProvider>
