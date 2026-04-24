@@ -4,6 +4,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { ThemeProvider } from "@/hooks/useTheme";
 import { AmbientProvider } from "@/hooks/useAmbient";
 import { GoalProvider } from "@/hooks/useGoal";
+import { SplashScreen } from "@/components/SplashScreen";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -34,11 +35,11 @@ export const Route = createRootRoute({
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
-      { rel: "icon", type: "image/png", sizes: "16x16", href: "/icons/favicon-16.png" },
-      { rel: "icon", type: "image/png", sizes: "32x32", href: "/icons/favicon-32.png" },
-      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/icon-192.png" },
-      { rel: "apple-touch-icon", sizes: "180x180", href: "/icons/apple-touch-icon.png" },
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico?v=2" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/icons/favicon-16.png?v=2" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/icons/favicon-32.png?v=2" },
+      { rel: "icon", type: "image/png", sizes: "192x192", href: "/icons/icon-192.png?v=2" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/icons/apple-touch-icon.png?v=2" },
       // iOS splash screens (launch images)
       { rel: "apple-touch-startup-image", href: "/splash/splash-iphone-14-pro-max-1290x2796.png", media: "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)" },
       { rel: "apple-touch-startup-image", href: "/splash/splash-iphone-14-1179x2556.png", media: "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3)" },
@@ -79,6 +80,7 @@ function RootComponent() {
       <AuthProvider>
         <GoalProvider>
           <AmbientProvider>
+            <SplashScreen />
             <Outlet />
             <Toaster />
           </AmbientProvider>
