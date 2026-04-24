@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import logo from "/icons/icon-512.png?url";
+
+const LOGO_SRC = "/icons/icon-512.png?v=2";
 
 const SPLASH_DURATION = 2400; // ms
 
