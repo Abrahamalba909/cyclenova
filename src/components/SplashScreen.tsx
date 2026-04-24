@@ -27,7 +27,7 @@ export function SplashScreen() {
       <div className="splash-logo-wrap">
         <div className="splash-logo-halo" />
         <img
-          src={logo}
+          src={LOGO_SRC}
           alt=""
           width={160}
           height={160}
