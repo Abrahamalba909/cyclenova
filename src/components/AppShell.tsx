@@ -18,7 +18,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="relative min-h-screen">
       <AmbientScene />
       <header className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 pt-5 flex items-center gap-2.5">
-        <img src="/icons/icon-192.png?v=2" alt="CycleNova" width={32} height={32} className="h-8 w-8 rounded-xl shadow-soft" />
+        <img src="/icons/icon-192.png" alt="CycleNova" width={32} height={32} className="h-8 w-8 rounded-xl shadow-soft" />
         <span className="font-display text-base font-bold tracking-tight">CycleNova</span>
       </header>
       <main className="relative z-10 max-w-2xl mx-auto pb-28 pt-3 px-4 sm:px-6">{children}</main>
