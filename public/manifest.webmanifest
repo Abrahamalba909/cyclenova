@@ -1,12 +1,12 @@
 {
   "name": "CycleNova",
   "short_name": "CycleNova",
-  "description": "Track your menstrual cycle, predict ovulation, log symptoms, chat with an AI health assistant, and connect with a supportive community.",
+  "description": "Women's health and cycle tracking app — track periods, predict ovulation, log symptoms, and chat with an AI health assistant.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F8BBD0",
+  "background_color": "#C2185B",
   "theme_color": "#C2185B",
   "categories": ["health", "lifestyle", "medical"],
   "icons": [
