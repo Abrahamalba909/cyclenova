@@ -512,7 +512,8 @@
 .splash-root {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  /* Sit above everything (modals, toasts, sticky nav) so it fully blocks UI. */
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -520,7 +521,12 @@
   gap: 1.25rem;
   overflow: hidden;
   isolation: isolate;
-  pointer-events: none;
+  /* Hard interaction block while splash is visible. */
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .splash-bg {
@@ -609,5 +615,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .splash-glow { animation: none; }
+  /* Quick fade only — no breathing glow, no sweep, no logo motion. */
+  .splash-glow,
+  .splash-sweep { display: none !important; animation: none !important; }
+  .splash-logo-wrap { animation: none !important; transform: none !important; }
 }
