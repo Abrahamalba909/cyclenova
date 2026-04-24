@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/hooks/useTheme";
 import { AmbientProvider } from "@/hooks/useAmbient";
 import { GoalProvider } from "@/hooks/useGoal";
 import { SplashScreen } from "@/components/SplashScreen";
+import { PWAInstall } from "@/components/PWAInstall";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
@@ -105,6 +106,7 @@ function RootComponent() {
         <GoalProvider>
           <AmbientProvider>
             <SplashScreen />
+            <PWAInstall />
             <Outlet />
             <Toaster />
           </AmbientProvider>
