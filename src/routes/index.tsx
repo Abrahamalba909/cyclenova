@@ -49,14 +49,14 @@ function Landing() {
             Track your period, predict ovulation, and log symptoms with the elegant health app designed for clarity, privacy, and peace of mind.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/auth" search={{ mode: "signup" }}>
+            <Link to="/dashboard">
               <Button size="lg" className="rounded-full bg-gradient-primary hover:opacity-90 shadow-glow h-12 px-7 font-semibold">
-                Get started — free <ArrowRight className="ml-2 h-4 w-4" />
+                Open App Now <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
             <Link to="/auth">
               <Button size="lg" variant="outline" className="rounded-full h-12 px-7 font-semibold border-foreground/15">
-                I already have an account
+                Sign in / Sync
               </Button>
             </Link>
           </div>

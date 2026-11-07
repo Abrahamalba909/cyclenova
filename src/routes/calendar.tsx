@@ -1,176 +1,219 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { format, isSameDay } from "date-fns";
-import { Droplet } from "lucide-react";
+import { Droplet, Plus, Calendar as CalIcon, Activity, Smile, Sparkles, Thermometer } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { CycleCalendar } from "@/components/CycleCalendar";
+import { DailyLogSheet } from "@/components/DailyLogSheet";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
-import { fmt, getDayPhase, phaseLabel, type CycleProfile, type PeriodEntry } from "@/lib/cycle";
+import { useCycleStore } from "@/lib/cycleStore";
+import { fmt, getDayPhase, phaseLabel, phaseColorMap } from "@/lib/cycle";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/calendar")({
   head: () => ({
     meta: [
-      { title: "Calendar — CycleNova" },
-      { name: "description", content: "Log your period, track symptoms, and visualize your cycle phases on a beautiful calendar." },
-      { property: "og:title", content: "CycleNova Calendar — Track every cycle day" },
-      { property: "og:description", content: "Log periods, symptoms, and see your fertile window and ovulation at a glance." },
-      { property: "og:image", content: "/og/calendar.jpg" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CycleNova Calendar" },
-      { name: "twitter:description", content: "Track periods, symptoms, and cycle phases visually." },
-      { name: "twitter:image", content: "/og/calendar.jpg" },
+      { title: "Cycle Calendar — CycleNova" },
+      {
+        name: "description",
+        content:
+          "Log your period, track daily symptoms, and visualize your menstrual cycle phases, ovulation, and fertile windows.",
+      },
     ],
   }),
   component: CalendarPage,
 });
 
-const SYMPTOMS = [
-  { key: "cramps", label: "Cramps" },
-  { key: "headache", label: "Headache" },
-  { key: "mood", label: "Mood swings" },
-  { key: "acne", label: "Acne" },
-  { key: "bloating", label: "Bloating" },
-  { key: "back_pain", label: "Back pain" },
-  { key: "fatigue", label: "Fatigue" },
-  { key: "energy", label: "Energy" },
-  { key: "sleep", label: "Sleep quality" },
-  { key: "libido", label: "Libido" },
-] as const;
-
-type SymptomKey = typeof SYMPTOMS[number]["key"];
-type SymptomState = Record<SymptomKey, number>;
-const empty = (): SymptomState => Object.fromEntries(SYMPTOMS.map((s) => [s.key, 0])) as SymptomState;
-
 function CalendarPage() {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
-  const [profile, setProfile] = useState<CycleProfile | null>(null);
-  const [periods, setPeriods] = useState<PeriodEntry[]>([]);
-  const [selected, setSelected] = useState<Date>(new Date());
-  const [symptoms, setSymptoms] = useState<SymptomState>(empty());
-  const [saving, setSaving] = useState(false);
+  const { profile, periods, symptoms, saveSymptomLog, getSymptomLog, savePeriod } = useCycleStore();
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [logSheetOpen, setLogSheetOpen] = useState(false);
 
-  useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth" });
-  }, [user, loading, navigate]);
+  const selectedDateStr = fmt(selectedDate);
+  const selectedLog = getSymptomLog(selectedDateStr);
+  const selectedPhase = getDayPhase(selectedDate, profile, periods);
+  const phaseColors = phaseColorMap[selectedPhase] || phaseColorMap.follicular;
 
-  useEffect(() => {
-    if (!user) return;
-    void (async () => {
-      const { data: p } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
-      if (p) setProfile({ cycle_length: p.cycle_length, period_length: p.period_length, last_period_start: p.last_period_start });
-      const { data: per } = await supabase.from("periods").select("start_date,end_date").eq("user_id", user.id).order("start_date", { ascending: false });
-      setPeriods(per ?? []);
-    })();
-  }, [user]);
+  const loggedDates = Object.keys(symptoms);
 
-  useEffect(() => {
-    if (!user) return;
-    void (async () => {
-      const { data } = await supabase.from("symptoms").select("*").eq("user_id", user.id).eq("log_date", fmt(selected)).maybeSingle();
-      if (data) {
-        const next = empty();
-        for (const k of SYMPTOMS) {
-          const v = (data as unknown as Record<string, number>)[k.key];
-          if (typeof v === "number") next[k.key] = v;
-        }
-        setSymptoms(next);
+  // Check if selected date is an existing recorded period
+  const isPeriodRecorded = periods.some((p) => {
+    const s = p.start_date;
+    const e = p.end_date || p.start_date;
+    return selectedDateStr >= s && selectedDateStr <= e;
+  });
+
+  const handleTogglePeriodDay = async () => {
+    try {
+      if (isPeriodRecorded) {
+        toast.info("This day is already logged as part of a period.");
       } else {
-        setSymptoms(empty());
+        await savePeriod({
+          start_date: selectedDateStr,
+          end_date: null,
+          flow_intensity: "medium",
+        });
+        toast.success(`Period recorded starting on ${format(selectedDate, "MMM d")}`);
       }
-    })();
-  }, [user, selected]);
-
-  const save = async () => {
-    if (!user) return;
-    setSaving(true);
-    try {
-      const { error } = await supabase.from("symptoms").upsert(
-        { user_id: user.id, log_date: fmt(selected), ...symptoms },
-        { onConflict: "user_id,log_date" }
-      );
-      if (error) throw error;
-      toast.success("Saved");
     } catch (e) {
-      toast.error((e as Error).message);
-    } finally {
-      setSaving(false);
+      toast.error("Could not record period");
     }
   };
-
-  const logPeriodOn = async () => {
-    if (!user) return;
-    try {
-      const date = fmt(selected);
-      const { error } = await supabase.from("periods").insert({ user_id: user.id, start_date: date });
-      if (error) throw error;
-      const latest = periods[0]?.start_date;
-      if (!latest || latest < date) {
-        await supabase.from("profiles").update({ last_period_start: date }).eq("user_id", user.id);
-      }
-      toast.success(`Period logged on ${format(selected, "MMM d")}`);
-      const { data: per } = await supabase.from("periods").select("start_date,end_date").eq("user_id", user.id).order("start_date", { ascending: false });
-      setPeriods(per ?? []);
-    } catch (e) {
-      toast.error((e as Error).message);
-    }
-  };
-
-  if (!profile) return <AppShell><div className="text-center py-20 text-muted-foreground">Loading…</div></AppShell>;
-
-  const phase = getDayPhase(selected, profile, periods);
-  const isPeriodLogged = periods.some((p) => isSameDay(new Date(p.start_date), selected));
 
   return (
     <AppShell>
-      <div className="mb-5">
-        <h1 className="font-display text-3xl font-bold">Calendar</h1>
-        <p className="text-sm text-muted-foreground mt-1">Tap any day to log symptoms or your period.</p>
-      </div>
-
-      <CycleCalendar profile={profile} periods={periods} selected={selected} onSelect={setSelected} />
-
-      <div className="bg-card border rounded-3xl p-5 shadow-soft mt-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="font-display text-lg font-semibold">{format(selected, "EEEE, MMMM d")}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">{phaseLabel[phase]}</p>
-          </div>
-          {!isPeriodLogged && (
-            <Button onClick={logPeriodOn} variant="outline" className="rounded-full text-xs h-9">
-              <Droplet className="h-3.5 w-3.5 mr-1" /> Log period
-            </Button>
-          )}
+      <div className="mb-5 flex items-start justify-between">
+        <div>
+          <h1 className="font-display text-3xl font-extrabold tracking-tight">Cycle Calendar</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">
+            Visualize your cycle rhythm, fertile days, and logged symptoms.
+          </p>
         </div>
 
-        <div className="mt-5 space-y-4">
-          {SYMPTOMS.map((s) => (
-            <div key={s.key}>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-sm font-medium">{s.label}</label>
-                <span className="text-xs text-muted-foreground">{symptoms[s.key]}/5</span>
-              </div>
-              <Slider
-                value={[symptoms[s.key]]}
-                min={0}
-                max={5}
-                step={1}
-                onValueChange={(v) => setSymptoms({ ...symptoms, [s.key]: v[0] })}
-              />
-            </div>
-          ))}
-        </div>
-
-        <Button onClick={save} disabled={saving} className="w-full mt-6 h-11 rounded-full bg-gradient-primary font-semibold shadow-soft">
-          {saving ? "Saving…" : "Save symptoms"}
+        <Button
+          onClick={() => setLogSheetOpen(true)}
+          className="rounded-full bg-gradient-primary font-bold text-xs h-10 px-4"
+        >
+          <Plus className="h-4 w-4 mr-1" /> Log Today
         </Button>
       </div>
+
+      <div className="space-y-4">
+        {/* The interactive multi-phase Calendar */}
+        <CycleCalendar
+          profile={profile}
+          periods={periods}
+          selected={selectedDate}
+          onSelect={setSelectedDate}
+          onOpenLog={(date) => {
+            setSelectedDate(date);
+            setLogSheetOpen(true);
+          }}
+          loggedDates={loggedDates}
+        />
+
+        {/* Selected Day Detailed Inspector Card */}
+        <div className="bg-card border rounded-3xl p-5 shadow-soft space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <span
+                className="text-xs font-bold px-2.5 py-0.5 rounded-full inline-block mb-1"
+                style={{
+                  backgroundColor: `color-mix(in oklab, ${phaseColors.bg} 18%, transparent)`,
+                  color: phaseColors.bg,
+                }}
+              >
+                {phaseLabel[selectedPhase]}
+              </span>
+              <h3 className="font-display text-lg font-bold">
+                {format(selectedDate, "EEEE, MMMM d, yyyy")}
+              </h3>
+            </div>
+
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setLogSheetOpen(true)}
+              className="rounded-full text-xs font-semibold"
+            >
+              <Plus className="h-3.5 w-3.5 mr-1" /> Log Symptoms
+            </Button>
+          </div>
+
+          {/* Quick period start button */}
+          <div className="pt-2 border-t flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">
+              {isPeriodRecorded ? "Period bleeding recorded on this day" : "Not logged as period day"}
+            </span>
+
+            <Button
+              size="sm"
+              variant={isPeriodRecorded ? "secondary" : "ghost"}
+              onClick={handleTogglePeriodDay}
+              className="rounded-full text-xs h-8"
+            >
+              <Droplet className="h-3.5 w-3.5 mr-1 text-rose-500" />
+              {isPeriodRecorded ? "Period Logged ✓" : "Mark Period Start"}
+            </Button>
+          </div>
+
+          {/* If there is a symptom log for this day, show its highlights */}
+          {selectedLog ? (
+            <div className="mt-3 p-3.5 rounded-2xl bg-muted/40 border space-y-2 text-xs">
+              <p className="font-bold text-foreground">Logged Symptoms & Vitals:</p>
+
+              <div className="flex flex-wrap gap-2">
+                {selectedLog.flow && selectedLog.flow !== "none" && (
+                  <span className="px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-600 font-semibold border border-rose-500/20">
+                    Flow: {selectedLog.flow}
+                  </span>
+                )}
+                {selectedLog.cramps ? (
+                  <span className="px-2.5 py-1 rounded-full bg-primary/10 text-primary font-semibold border border-primary/20">
+                    Cramps: {selectedLog.cramps}/10
+                  </span>
+                ) : null}
+                {selectedLog.headache ? (
+                  <span className="px-2.5 py-1 rounded-full bg-muted text-foreground font-medium">
+                    Headache: {selectedLog.headache}/10
+                  </span>
+                ) : null}
+                {selectedLog.bloating ? (
+                  <span className="px-2.5 py-1 rounded-full bg-muted text-foreground font-medium">
+                    Bloating: {selectedLog.bloating}/10
+                  </span>
+                ) : null}
+                {selectedLog.temperature_c && (
+                  <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 font-semibold border border-cyan-500/20 flex items-center gap-1">
+                    <Thermometer className="h-3 w-3" /> {selectedLog.temperature_c}°C BBT
+                  </span>
+                )}
+                {selectedLog.mucus && (
+                  <span className="px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 font-semibold border border-amber-500/20 flex items-center gap-1">
+                    <Sparkles className="h-3 w-3" /> Mucus: {selectedLog.mucus}
+                  </span>
+                )}
+              </div>
+
+              {selectedLog.mood_tags && selectedLog.mood_tags.length > 0 && (
+                <div className="flex items-center gap-1.5 flex-wrap pt-1">
+                  <span className="text-muted-foreground font-medium">Mood:</span>
+                  {selectedLog.mood_tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-0.5 rounded-full bg-card border text-[11px] font-medium"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {selectedLog.notes && (
+                <p className="italic text-muted-foreground text-[11px] pt-1">
+                  "{selectedLog.notes}"
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="p-3 rounded-2xl bg-muted/20 border border-dashed text-center text-xs text-muted-foreground">
+              No daily symptoms logged for this date.
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Log Sheet Modal */}
+      <DailyLogSheet
+        open={logSheetOpen}
+        onOpenChange={setLogSheetOpen}
+        date={selectedDate}
+        initialLog={selectedLog}
+        onSave={async (log) => {
+          await saveSymptomLog(log);
+        }}
+        isPeriodDay={selectedPhase === "period" || selectedPhase === "menstrual"}
+      />
     </AppShell>
   );
 }

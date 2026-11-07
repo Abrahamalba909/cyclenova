@@ -149,6 +149,15 @@
   .bg-gradient-card { background: var(--gradient-card); }
   .shadow-soft { box-shadow: var(--shadow-soft); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
+  .privacy-shield {
+    filter: blur(8px);
+    user-select: none;
+    transition: filter 0.25s ease;
+  }
+  .privacy-shield:hover,
+  .privacy-shield:focus-within {
+    filter: blur(0px);
+  }
 }
 
 /* ============================================

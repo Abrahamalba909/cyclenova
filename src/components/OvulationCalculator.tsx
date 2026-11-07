@@ -1,5 +1,5 @@
 import { format, isSameDay, differenceInCalendarDays } from "date-fns";
-import { Sparkles, Heart, Shield, Flame } from "lucide-react";
+import { Sparkles, Heart, Shield, Flame, Activity, Thermometer, Info } from "lucide-react";
 import type { CycleStats } from "@/lib/cycle";
 import type { Goal } from "@/hooks/useGoal";
 
@@ -9,167 +9,109 @@ interface Props {
   goal?: Goal;
 }
 
-type FertilityStatus = "high" | "ovulation" | "safe";
-
-function getStatus(today: Date, stats: CycleStats): FertilityStatus {
-  if (isSameDay(today, stats.ovulationDay)) return "ovulation";
-  if (today >= stats.fertileWindow.start && today <= stats.fertileWindow.end) return "high";
-  return "safe";
-}
-
-const statusMeta: Record<
-  FertilityStatus,
-  { label: string; sub: string; icon: typeof Flame; bg: string; fg: string; ring: string }
-> = {
-  high: {
-    label: "High chance of pregnancy",
-    sub: "You're in your fertile window",
-    icon: Flame,
-    bg: "color-mix(in oklab, var(--period) 14%, transparent)",
-    fg: "var(--period)",
-    ring: "var(--period)",
-  },
-  ovulation: {
-    label: "Ovulation Day",
-    sub: "Peak fertility today",
-    icon: Sparkles,
-    bg: "color-mix(in oklab, var(--ovulation) 18%, transparent)",
-    fg: "var(--ovulation)",
-    ring: "var(--ovulation)",
-  },
-  safe: {
-    label: "Low pregnancy risk",
-    sub: "Outside your fertile window",
-    icon: Shield,
-    bg: "color-mix(in oklab, oklch(0.7 0.14 150) 16%, transparent)",
-    fg: "oklch(0.45 0.14 150)",
-    ring: "oklch(0.6 0.14 150)",
-  },
-};
-
 export function OvulationCalculator({ stats, today = new Date(), goal = "tracking" }: Props) {
-  const status = getStatus(today, stats);
-  const meta = statusMeta[status];
-  const Icon = meta.icon;
+  const isOvulationDay = isSameDay(today, stats.ovulationDay);
+  const isInFertileWindow = today >= stats.fertileWindow.start && today <= stats.fertileWindow.end;
   const daysToOvulation = differenceInCalendarDays(stats.ovulationDay, today);
-
-  const goalBanner =
-    goal === "conceive"
-      ? { text: "Trying to conceive — fertile days are highlighted.", color: "var(--period)" }
-      : goal === "avoid"
-        ? { text: "Avoiding pregnancy — safe days are highlighted.", color: "oklch(0.45 0.14 150)" }
-        : null;
 
   return (
     <section
       aria-labelledby="ovulation-heading"
-      className="bg-card border rounded-3xl p-5 shadow-soft"
+      className="bg-card border rounded-3xl p-5 shadow-soft space-y-4"
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-9 w-9 rounded-xl bg-primary-soft text-primary flex items-center justify-center">
-            <Sparkles className="h-4 w-4" />
+          <div className="h-9 w-9 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <Sparkles className="h-5 w-5" />
           </div>
-          <h2 id="ovulation-heading" className="font-display text-lg font-semibold">
-            Ovulation Calculator
-          </h2>
+          <div>
+            <h2 id="ovulation-heading" className="font-display text-lg font-bold">
+              Ovulation & Fertility Intelligence
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {stats.lutealLength}-day luteal phase model
+            </p>
+          </div>
         </div>
-        <span className="text-[11px] uppercase tracking-widest text-muted-foreground font-medium">
-          {stats.averageCycleLength}-day cycle
+
+        <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-muted text-foreground">
+          {stats.conceptionChance.toUpperCase()} CHANCE
         </span>
       </div>
 
-      {goalBanner && (
-        <div
-          className="mb-3 rounded-xl px-3 py-2 text-xs font-medium"
-          style={{
-            background: `color-mix(in oklab, ${goalBanner.color} 12%, transparent)`,
-            color: goalBanner.color,
-            border: `1px solid color-mix(in oklab, ${goalBanner.color} 30%, transparent)`,
-          }}
-        >
-          {goalBanner.text}
+      {/* Hero Banner based on Goal */}
+      {goal === "conceive" ? (
+        <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200">
+          <p className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-amber-700 dark:text-amber-300">
+            <Heart className="h-4 w-4 fill-amber-500 text-amber-500" /> Trying to Conceive (TTC) Mode
+          </p>
+          <p className="text-sm font-semibold mt-1">
+            {isInFertileWindow
+              ? isOvulationDay
+                ? "Peak fertility today! Best timing for conception."
+                : "High-chance fertile window is active."
+              : daysToOvulation > 0
+                ? `Next fertile window opens in ${Math.max(0, daysToOvulation - 5)} days.`
+                : "Fertile window has passed for this cycle."}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Fertile window: {format(stats.fertileWindow.start, "MMM d")} – {format(stats.fertileWindow.end, "MMM d")}. Look for clear, stretchy cervical fluid.
+          </p>
+        </div>
+      ) : goal === "avoid" ? (
+        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-900 dark:text-emerald-200">
+          <p className="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-emerald-700 dark:text-emerald-300">
+            <Shield className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /> Natural Prevention Mode
+          </p>
+          <p className="text-sm font-semibold mt-1">
+            {isInFertileWindow
+              ? "High pregnancy risk! Strict barrier protection or abstinence recommended."
+              : "Lower probability pregnancy days outside the fertile window."}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">
+            Caution window: {format(stats.fertileWindow.start, "MMM d")} – {format(stats.fertileWindow.end, "MMM d")}. Standard calendar estimates should be combined with symptom tracking.
+          </p>
+        </div>
+      ) : (
+        <div className="p-3.5 rounded-2xl bg-background/50 border flex items-center justify-between">
+          <div>
+            <p className="text-xs font-bold text-foreground">
+              Predicted Ovulation: {format(stats.ovulationDay, "EEEE, MMMM d")}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Fertile span: {format(stats.fertileWindow.start, "MMM d")} – {format(stats.fertileWindow.end, "MMM d")}
+            </p>
+          </div>
+          <span className="text-xs font-bold text-primary">
+            {daysToOvulation === 0
+              ? "Today!"
+              : daysToOvulation > 0
+                ? `in ${daysToOvulation}d`
+                : `${Math.abs(daysToOvulation)}d ago`}
+          </span>
         </div>
       )}
 
-      {/* Hero status pill */}
-      <div
-        className="rounded-2xl p-4 flex items-center gap-3"
-        style={{
-          background: meta.bg,
-          border: `1px solid color-mix(in oklab, ${meta.ring} 35%, transparent)`,
-        }}
-      >
-        <div
-          className="h-11 w-11 rounded-2xl flex items-center justify-center shrink-0"
-          style={{ background: `color-mix(in oklab, ${meta.fg} 22%, transparent)`, color: meta.fg }}
-        >
-          <Icon className="h-5 w-5" />
-        </div>
-        <div className="min-w-0">
-          <p className="font-display text-base font-semibold leading-tight" style={{ color: meta.fg }}>
-            {meta.label}
+      {/* Ovulation Signs Guide */}
+      <div className="grid grid-cols-2 gap-2 text-xs">
+        <div className="p-3 rounded-2xl border bg-background/40">
+          <p className="font-bold text-foreground flex items-center gap-1.5 mb-1">
+            <Thermometer className="h-3.5 w-3.5 text-cyan-500" /> Thermal Shift
           </p>
-          <p className="text-xs text-muted-foreground mt-0.5">{meta.sub}</p>
+          <p className="text-[11px] text-muted-foreground leading-snug">
+            Basal temperature jumps ~0.3°C immediately after ovulation and stays elevated through the luteal phase.
+          </p>
         </div>
-      </div>
 
-      {/* Key dates grid */}
-      <div className="grid grid-cols-3 gap-2 mt-3">
-        <KeyDate
-          label="Ovulation"
-          value={format(stats.ovulationDay, "MMM d")}
-          sub={
-            daysToOvulation === 0
-              ? "Today"
-              : daysToOvulation > 0
-                ? `In ${daysToOvulation}d`
-                : `${Math.abs(daysToOvulation)}d ago`
-          }
-          color="var(--ovulation)"
-        />
-        <KeyDate
-          label="Fertile from"
-          value={format(stats.fertileWindow.start, "MMM d")}
-          sub={`to ${format(stats.fertileWindow.end, "MMM d")}`}
-          color="var(--period)"
-        />
-        <KeyDate
-          label="Next period"
-          value={format(stats.nextPeriodStart, "MMM d")}
-          sub={`Day ${stats.cycleDay}`}
-          color="var(--primary)"
-        />
-      </div>
-
-      {/* Legend */}
-      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] text-muted-foreground">
-        <LegendDot color="var(--period)" label="High chance" />
-        <LegendDot color="var(--ovulation)" label="Ovulation" />
-        <LegendDot color="oklch(0.6 0.14 150)" label="Low risk" />
+        <div className="p-3 rounded-2xl border bg-background/40">
+          <p className="font-bold text-foreground flex items-center gap-1.5 mb-1">
+            <Sparkles className="h-3.5 w-3.5 text-amber-500" /> Cervical Fluid
+          </p>
+          <p className="text-[11px] text-muted-foreground leading-snug">
+            Watery, clear, raw egg-white consistency creates the optimal nutrient channel for sperm survival.
+          </p>
+        </div>
       </div>
     </section>
-  );
-}
-
-function KeyDate({ label, value, sub, color }: { label: string; value: string; sub: string; color: string }) {
-  return (
-    <div className="rounded-2xl border bg-background/40 p-3">
-      <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider font-semibold" style={{ color }}>
-        <Heart className="h-3 w-3" fill="currentColor" />
-        {label}
-      </div>
-      <p className="font-display text-base font-bold mt-1.5 leading-none">{value}</p>
-      <p className="text-[11px] text-muted-foreground mt-1">{sub}</p>
-    </div>
-  );
-}
-
-function LegendDot({ color, label }: { color: string; label: string }) {
-  return (
-    <span className="inline-flex items-center gap-1.5">
-      <span className="h-2 w-2 rounded-full" style={{ background: color }} />
-      {label}
-    </span>
   );
 }

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { Heart, ArrowLeft } from "lucide-react";
+import { Heart, ArrowLeft, ShieldCheck, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,11 +53,16 @@ function AuthPage() {
     }
   };
 
+  const handleGuestContinue = () => {
+    toast.info("Entering Private Offline Mode. Data saved on your device.");
+    navigate({ to: "/dashboard" });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-hero flex flex-col">
       <header className="px-6 py-5">
         <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Back
+          <ArrowLeft className="h-4 w-4" /> Back to home
         </Link>
       </header>
       <div className="flex-1 flex items-center justify-center px-5 py-8">
@@ -70,7 +75,9 @@ function AuthPage() {
               {mode === "signup" ? "Create your account" : "Welcome back"}
             </h1>
             <p className="text-muted-foreground mt-2 text-sm">
-              {mode === "signup" ? "Start tracking your cycle today." : "Sign in to continue your journey."}
+              {mode === "signup"
+                ? "Start tracking your cycle with cloud backup."
+                : "Sign in to sync your data across devices."}
             </p>
           </div>
 
@@ -109,6 +116,28 @@ function AuthPage() {
             >
               {loading ? "Please wait…" : mode === "signup" ? "Create account" : "Sign in"}
             </Button>
+
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground font-semibold">Or</span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleGuestContinue}
+              className="w-full h-11 rounded-full font-semibold border-emerald-500/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/10"
+            >
+              <ShieldCheck className="h-4 w-4 mr-2 text-emerald-500" />
+              Continue in Private Offline Mode
+            </Button>
+            <p className="text-[11px] text-center text-muted-foreground">
+              No account or password needed. All cycle data stays 100% on this device.
+            </p>
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">

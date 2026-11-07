@@ -1,16 +1,32 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Droplet, Plus, Settings as SettingsIcon, CalendarCog, Target } from "lucide-react";
+import {
+  Droplet,
+  Plus,
+  Settings as SettingsIcon,
+  CalendarCog,
+  Target,
+  Eye,
+  EyeOff,
+  Sparkles,
+  ShieldCheck,
+  Calendar,
+  Activity,
+  Zap,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/AppShell";
-import { PhaseRing } from "@/components/PhaseRing";
+import { InteractiveCycleWheel } from "@/components/InteractiveCycleWheel";
+import { PhaseCompassCard } from "@/components/PhaseCompassCard";
 import { OvulationCalculator } from "@/components/OvulationCalculator";
 import { EditPeriodDialog } from "@/components/EditPeriodDialog";
+import { CycleForecastTimeline } from "@/components/CycleForecastTimeline";
+import { DailyLogSheet } from "@/components/DailyLogSheet";
 import { useAuth } from "@/hooks/useAuth";
-import { useGoal, goalLabel, type Goal } from "@/hooks/useGoal";
-import { supabase } from "@/integrations/supabase/client";
-import { computeStats, fmt, phaseDescription, phaseLabel, type CycleProfile, type PeriodEntry } from "@/lib/cycle";
+import { goalLabel, type Goal } from "@/hooks/useGoal";
+import { useCycleStore } from "@/lib/cycleStore";
+import { phaseDescription, phaseLabel, phaseColorMap, fmt } from "@/lib/cycle";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
@@ -18,277 +34,275 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function Dashboard() {
-  const { user, loading } = useAuth();
-  const { goal, setGoal, saving: goalSaving } = useGoal();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const [profile, setProfile] = useState<CycleProfile | null>(null);
-  const [periods, setPeriods] = useState<PeriodEntry[]>([]);
-  const [name, setName] = useState<string>("");
-  const [logging, setLogging] = useState(false);
+  const {
+    profile,
+    periods,
+    stats,
+    goal,
+    setGoal,
+    privacyMode,
+    togglePrivacyMode,
+    logPeriodToday,
+    saveSymptomLog,
+    getSymptomLog,
+    isGuest,
+    isLoaded,
+    updateProfile,
+  } = useCycleStore();
+
+  const [loggingPeriod, setLoggingPeriod] = useState(false);
+  const [logSheetOpen, setLogSheetOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const handleGoalChange = async (next: Goal) => {
-    if (next === goal || goalSaving) return; // lockout: ignore rapid taps while saving
+    if (next === goal) return;
     try {
       await setGoal(next);
-      toast.success("Goal updated successfully");
+      toast.success(`Goal switched to ${goalLabel[next]}`);
     } catch (e) {
-      toast.error("Unable to save changes. Please try again.");
-      console.error(e);
+      toast.error("Could not update goal");
     }
   };
 
-
-  useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth" });
-  }, [user, loading, navigate]);
-
-  useEffect(() => {
-    if (!user) return;
-    void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
-
-  const load = async () => {
-    if (!user) return;
-    const { data: p } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
-    if (!p?.onboarded) {
-      navigate({ to: "/onboarding" });
-      return;
-    }
-    setName(p.display_name || "there");
-    setProfile({ cycle_length: p.cycle_length, period_length: p.period_length, last_period_start: p.last_period_start });
-    const { data: per } = await supabase.from("periods").select("start_date,end_date").eq("user_id", user.id).order("start_date", { ascending: false });
-    setPeriods(per ?? []);
-  };
-
-  const logPeriodToday = async () => {
-    if (!user) return;
-    setLogging(true);
+  const handlePeriodToday = async () => {
+    setLoggingPeriod(true);
     try {
-      const today = fmt(new Date());
-      const { error } = await supabase.from("periods").insert({ user_id: user.id, start_date: today });
-      if (error) throw error;
-      await supabase.from("profiles").update({ last_period_start: today }).eq("user_id", user.id);
-      toast.success("Period logged for today");
-      await load();
+      await logPeriodToday();
+      toast.success("Period logged for today!");
     } catch (e) {
-      toast.error((e as Error).message);
+      toast.error("Could not record period");
     } finally {
-      setLogging(false);
+      setLoggingPeriod(false);
     }
   };
 
-  if (!profile) {
+  if (!isLoaded || !stats) {
     return (
       <AppShell>
-        <div className="text-center text-muted-foreground py-20">Loading…</div>
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <div className="h-10 w-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+          <p className="text-sm font-semibold text-muted-foreground">Calculating your cycle...</p>
+        </div>
       </AppShell>
     );
   }
 
-  const stats = computeStats(profile, periods);
+  const todayStr = fmt(new Date());
+  const todayLog = getSymptomLog(todayStr);
 
   return (
     <AppShell>
-      <div className="mb-6 flex items-start justify-between">
+      {/* Header Bar */}
+      <div className="mb-5 flex items-start justify-between">
         <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground">{format(new Date(), "EEEE, MMMM d")}</p>
-          <h1 className="font-display text-3xl font-bold mt-1">Hello, {name}</h1>
+          <div className="flex items-center gap-2">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
+              {format(new Date(), "EEEE, MMMM d")}
+            </p>
+            {isGuest && (
+              <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-semibold">
+                <ShieldCheck className="h-3 w-3" /> Private Offline Mode
+              </span>
+            )}
+          </div>
+          <h1 className="font-display text-3xl font-extrabold mt-1 tracking-tight">
+            Cycle Intelligence
+          </h1>
         </div>
-        <Link to="/settings" className="h-10 w-10 rounded-full bg-card border flex items-center justify-center text-muted-foreground hover:text-primary">
-          <SettingsIcon className="h-4 w-4" />
-        </Link>
+
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={togglePrivacyMode}
+            className="h-10 w-10 rounded-full bg-card border flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
+            title={privacyMode ? "Privacy Mode On" : "Privacy Mode Off"}
+          >
+            {privacyMode ? <EyeOff className="h-4 w-4 text-primary" /> : <Eye className="h-4 w-4" />}
+          </button>
+
+          <Link
+            to="/settings"
+            className="h-10 w-10 rounded-full bg-card border flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
+          >
+            <SettingsIcon className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
 
-      {stats && (
-        <div className="space-y-4">
-          {/* Current Cycle Status */}
-          <div className="bg-card border rounded-3xl p-7 shadow-soft text-center">
-            <PhaseRing
-              cycleDay={stats.cycleDay}
-              cycleLength={stats.averageCycleLength}
-              daysUntil={stats.daysUntilPeriod}
-              phase={stats.currentPhase}
+      <div className="space-y-4">
+        {/* Hero Interactive Wheel */}
+        <div className="bg-card border rounded-3xl p-6 shadow-soft">
+          <InteractiveCycleWheel
+            stats={stats}
+            goal={goal}
+            privacyMode={privacyMode}
+            onTogglePrivacy={togglePrivacyMode}
+          />
+
+          {/* Quick Metrics Bar */}
+          <div className={`mt-6 grid grid-cols-3 gap-2.5 ${privacyMode ? "privacy-shield" : ""}`}>
+            <MetricCard
+              label="Cycle Day"
+              value={`Day ${stats.cycleDay}`}
+              sub={`of ${stats.averageCycleLength} days`}
+              accent="var(--primary)"
             />
-            <div className="mt-6">
-              <p className="font-display text-xl font-semibold">{phaseLabel[stats.currentPhase]}</p>
-              <p className="text-sm text-muted-foreground mt-1.5 max-w-sm mx-auto">
-                {phaseDescription[stats.currentPhase]}
-              </p>
-            </div>
-
-            {/* Quick metrics inline */}
-            <div className="mt-5 grid grid-cols-3 gap-2 text-left">
-              <MetricPill label="Cycle day" value={`${stats.cycleDay}`} accent="var(--primary)" />
-              <MetricPill
-                label="Next period"
-                value={stats.daysUntilPeriod <= 0 ? "Likely" : `${stats.daysUntilPeriod}d`}
-                accent="var(--period)"
-              />
-              <MetricPill
-                label="Ovulation"
-                value={format(stats.ovulationDay, "MMM d")}
-                accent="var(--ovulation)"
-              />
-            </div>
-          </div>
-
-          {/* Your Goal */}
-          <div className="bg-card border rounded-3xl p-5 shadow-soft">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-xl bg-primary-soft text-primary flex items-center justify-center">
-                  <Target className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">Your goal</p>
-                  <p className="font-display text-base font-bold leading-none mt-0.5">{goalLabel[goal]}</p>
-                </div>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {(["tracking", "conceive", "avoid"] as const).map((v) => {
-                const active = goal === v;
-                const isPending = goalSaving && !active;
-                return (
-                  <button
-                    key={v}
-                    type="button"
-                    onClick={() => handleGoalChange(v)}
-                    aria-pressed={active}
-                    disabled={goalSaving}
-                    aria-busy={goalSaving}
-                    className={`p-3 rounded-2xl border-2 text-sm font-semibold transition-all disabled:cursor-not-allowed ${
-                      active
-                        ? "border-primary bg-gradient-primary text-primary-foreground shadow-soft scale-[1.02]"
-                        : isPending
-                          ? "border-border bg-background/40 opacity-60"
-                          : "border-border bg-background/40 hover:border-primary/40"
-                    }`}
-                  >
-                    {goalLabel[v]}
-                  </button>
-                );
-              })}
-            </div>
-            {goalSaving && (
-              <p className="text-[11px] text-muted-foreground mt-2 text-center">Saving your goal…</p>
-            )}
-            <GoalGuidance goal={goal} stats={stats} />
-          </div>
-
-          {/* Ovulation Calculator */}
-          <OvulationCalculator stats={stats} goal={goal} />
-
-          {/* Quick log */}
-          <div className="bg-card border rounded-3xl p-5 shadow-soft">
-            <h3 className="font-display text-lg font-semibold mb-3">Quick actions</h3>
-            <div className="flex gap-2 flex-wrap">
-              <Button
-                onClick={logPeriodToday}
-                disabled={logging}
-                className="rounded-full bg-gradient-primary font-semibold"
-              >
-                <Droplet className="h-4 w-4 mr-1.5" /> Period started today
-              </Button>
-              <Button
-                variant="outline"
-                className="rounded-full"
-                onClick={() => navigate({ to: "/calendar" })}
-              >
-                <Plus className="h-4 w-4 mr-1.5" /> Log symptoms
-              </Button>
-              <EditPeriodDialog
-                userId={user!.id}
-                initial={{
-                  last_period_start: profile.last_period_start,
-                  period_length: profile.period_length,
-                  cycle_length: profile.cycle_length,
-                }}
-                onSaved={load}
-                trigger={
-                  <Button variant="outline" className="rounded-full">
-                    <CalendarCog className="h-4 w-4 mr-1.5" /> Edit period
-                  </Button>
-                }
-              />
-            </div>
+            <MetricCard
+              label="Next Period"
+              value={stats.daysUntilPeriod <= 0 ? "Likely Today" : `${stats.daysUntilPeriod}d away`}
+              sub={format(stats.nextPeriodStart, "MMM d")}
+              accent="oklch(0.55 0.22 15)"
+            />
+            <MetricCard
+              label="Regularity"
+              value={
+                stats.regularity === "regular"
+                  ? "Regular"
+                  : stats.regularity === "slightly_irregular"
+                    ? "Slightly Irreg."
+                    : stats.regularity === "irregular"
+                      ? "Irregular"
+                      : "Calculating"
+              }
+              sub={`${stats.confidenceScore}% confidence`}
+              accent="oklch(0.68 0.16 155)"
+            />
           </div>
         </div>
-      )}
+
+        {/* Quick Action Toolbar */}
+        <div className="bg-card border rounded-3xl p-4 shadow-soft">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-display text-sm font-bold uppercase tracking-wider text-muted-foreground">
+              Quick Actions
+            </h3>
+            <span className="text-xs text-muted-foreground">
+              {todayLog ? "Today's log recorded ✓" : "No log yet today"}
+            </span>
+          </div>
+
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              onClick={handlePeriodToday}
+              disabled={loggingPeriod}
+              className="rounded-full bg-gradient-primary font-bold text-xs h-10 px-5 shadow-xs"
+            >
+              <Droplet className="h-4 w-4 mr-1.5" /> Period Started Today
+            </Button>
+
+            <Button
+              variant="outline"
+              className="rounded-full text-xs h-10 px-4 font-semibold"
+              onClick={() => {
+                setSelectedDate(new Date());
+                setLogSheetOpen(true);
+              }}
+            >
+              <Plus className="h-4 w-4 mr-1.5" /> Log Symptoms & Mood
+            </Button>
+
+            <EditPeriodDialog
+              userId={user?.id}
+              initial={{
+                last_period_start: profile.last_period_start,
+                period_length: profile.period_length,
+                cycle_length: profile.cycle_length,
+              }}
+              onSaved={() => {}}
+              trigger={
+                <Button variant="ghost" className="rounded-full text-xs h-10 px-3 text-muted-foreground">
+                  <CalendarCog className="h-4 w-4 mr-1" /> Edit Cycle
+                </Button>
+              }
+            />
+          </div>
+        </div>
+
+        {/* Tracking Goal Switcher */}
+        <div className="bg-card border rounded-3xl p-5 shadow-soft">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                <Target className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
+                  Tracking Focus
+                </p>
+                <p className="font-display text-base font-bold leading-tight">{goalLabel[goal]}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            {(["tracking", "conceive", "avoid"] as const).map((v) => {
+              const active = goal === v;
+              return (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => handleGoalChange(v)}
+                  className={`p-3 rounded-2xl border text-xs font-bold transition-all ${
+                    active
+                      ? "border-primary bg-primary text-primary-foreground shadow-soft scale-[1.02]"
+                      : "border-border bg-card/60 hover:bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {goalLabel[v]}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Phase Compass: Nutrition, Hormones, Exercise */}
+        <PhaseCompassCard stats={stats} />
+
+        {/* Ovulation & Fertility Intelligence */}
+        <OvulationCalculator stats={stats} goal={goal} />
+
+        {/* 6-Month Cycle Forecast */}
+        <CycleForecastTimeline profile={profile} periods={periods} />
+      </div>
+
+      {/* Daily Symptom & Period Log Modal */}
+      <DailyLogSheet
+        open={logSheetOpen}
+        onOpenChange={setLogSheetOpen}
+        date={selectedDate}
+        initialLog={getSymptomLog(fmt(selectedDate))}
+        onSave={async (log) => {
+          await saveSymptomLog(log);
+        }}
+        isPeriodDay={stats.canonicalPhase === "menstrual"}
+      />
     </AppShell>
   );
 }
 
-function MetricPill({ label, value, accent }: { label: string; value: string; accent: string }) {
+function MetricCard({
+  label,
+  value,
+  sub,
+  accent,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  accent: string;
+}) {
   return (
-    <div className="rounded-2xl border bg-background/40 p-2.5">
-      <p className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: accent }}>
+    <div className="rounded-2xl border bg-background/50 p-3 flex flex-col justify-between">
+      <p className="text-[10px] uppercase tracking-wider font-bold" style={{ color: accent }}>
         {label}
       </p>
-      <p className="font-display text-base font-bold mt-0.5 leading-none">{value}</p>
-    </div>
-  );
-}
-
-function GoalGuidance({ goal, stats }: { goal: Goal; stats: ReturnType<typeof computeStats> }) {
-  if (!stats) return null;
-
-  if (goal === "conceive") {
-    return (
-      <div
-        className="mt-4 rounded-2xl p-3.5"
-        style={{
-          background: "color-mix(in oklab, var(--period) 12%, transparent)",
-          border: "1px solid color-mix(in oklab, var(--period) 28%, transparent)",
-        }}
-      >
-        <p className="text-xs font-semibold" style={{ color: "var(--period)" }}>
-          High chance days
+      <div>
+        <p className="font-display text-base font-extrabold text-foreground mt-0.5 leading-tight">
+          {value}
         </p>
-        <p className="text-sm font-medium mt-1">
-          {format(stats.fertileWindow.start, "MMM d")} – {format(stats.fertileWindow.end, "MMM d")}
-        </p>
-        <p className="text-xs text-muted-foreground mt-1">
-          Best timing for conception is around ovulation on {format(stats.ovulationDay, "MMM d")}.
-        </p>
+        <p className="text-[10px] text-muted-foreground mt-0.5">{sub}</p>
       </div>
-    );
-  }
-
-  if (goal === "avoid") {
-    return (
-      <div
-        className="mt-4 rounded-2xl p-3.5"
-        style={{
-          background: "color-mix(in oklab, oklch(0.7 0.14 150) 12%, transparent)",
-          border: "1px solid color-mix(in oklab, oklch(0.7 0.14 150) 28%, transparent)",
-        }}
-      >
-        <p className="text-xs font-semibold" style={{ color: "oklch(0.45 0.14 150)" }}>
-          Low risk days
-        </p>
-        <p className="text-sm font-medium mt-1">
-          Outside {format(stats.fertileWindow.start, "MMM d")} – {format(stats.fertileWindow.end, "MMM d")}
-        </p>
-        <p className="text-xs text-muted-foreground mt-1">
-          Avoid unprotected intimacy during your fertile window for lowest pregnancy risk.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mt-4 rounded-2xl p-3.5 bg-background/40 border">
-      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-        Cycle tracking
-      </p>
-      <p className="text-sm font-medium mt-1">
-        Day {stats.cycleDay} of {stats.averageCycleLength} — {phaseLabel[stats.currentPhase]}
-      </p>
-      <p className="text-xs text-muted-foreground mt-1">
-        Keep logging to refine your predictions and insights.
-      </p>
     </div>
   );
 }

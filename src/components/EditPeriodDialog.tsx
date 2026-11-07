@@ -16,15 +16,16 @@ import {
 } from "@/components/ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useCycleStore } from "@/lib/cycleStore";
 
 const Schema = z.object({
   last_period_start: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Pick a valid date"),
-  period_length: z.number().int().min(2).max(10),
-  cycle_length: z.number().int().min(20).max(45),
+  period_length: z.number().int().min(2).max(12),
+  cycle_length: z.number().int().min(20).max(50),
 });
 
 interface Props {
-  userId: string;
+  userId?: string | null;
   initial: {
     last_period_start: string | null;
     period_length: number;
@@ -37,15 +38,16 @@ interface Props {
 export function EditPeriodDialog({ userId, initial, onSaved, trigger }: Props) {
   const [open, setOpen] = useState(false);
   const [lastStart, setLastStart] = useState(initial.last_period_start ?? format(new Date(), "yyyy-MM-dd"));
-  const [periodLen, setPeriodLen] = useState(initial.period_length);
-  const [cycleLen, setCycleLen] = useState(initial.cycle_length);
+  const [periodLen, setPeriodLen] = useState(initial.period_length || 5);
+  const [cycleLen, setCycleLen] = useState(initial.cycle_length || 28);
   const [saving, setSaving] = useState(false);
+  const { updateProfile, savePeriod } = useCycleStore();
 
   useEffect(() => {
     if (open) {
       setLastStart(initial.last_period_start ?? format(new Date(), "yyyy-MM-dd"));
-      setPeriodLen(initial.period_length);
-      setCycleLen(initial.cycle_length);
+      setPeriodLen(initial.period_length || 5);
+      setCycleLen(initial.cycle_length || 28);
     }
   }, [open, initial.last_period_start, initial.period_length, initial.cycle_length]);
 
@@ -61,31 +63,50 @@ export function EditPeriodDialog({ userId, initial, onSaved, trigger }: Props) {
     }
     setSaving(true);
     try {
-      // Update profile
-      const { error: pErr } = await supabase
-        .from("profiles")
-        .update({
-          last_period_start: parsed.data.last_period_start,
-          period_length: parsed.data.period_length,
-          cycle_length: parsed.data.cycle_length,
-        })
-        .eq("user_id", userId);
-      if (pErr) throw pErr;
+      // Update local store
+      await updateProfile({
+        last_period_start: parsed.data.last_period_start,
+        period_length: parsed.data.period_length,
+        cycle_length: parsed.data.cycle_length,
+      });
 
-      // Upsert a period entry for that start date so the calendar reflects it
-      const { data: existing } = await supabase
-        .from("periods")
-        .select("id")
-        .eq("user_id", userId)
-        .eq("start_date", parsed.data.last_period_start)
-        .maybeSingle();
-      if (!existing) {
-        await supabase.from("periods").insert({
-          user_id: userId,
-          start_date: parsed.data.last_period_start,
-        });
+      await savePeriod({
+        start_date: parsed.data.last_period_start,
+        end_date: null,
+        flow_intensity: "medium",
+      });
+
+      // If user is authenticated, sync to Supabase
+      if (userId) {
+        try {
+          await supabase
+            .from("profiles")
+            .update({
+              last_period_start: parsed.data.last_period_start,
+              period_length: parsed.data.period_length,
+              cycle_length: parsed.data.cycle_length,
+            })
+            .eq("user_id", userId);
+
+          const { data: existing } = await supabase
+            .from("periods")
+            .select("id")
+            .eq("user_id", userId)
+            .eq("start_date", parsed.data.last_period_start)
+            .maybeSingle();
+
+          if (!existing) {
+            await supabase.from("periods").insert({
+              user_id: userId,
+              start_date: parsed.data.last_period_start,
+            });
+          }
+        } catch (syncErr) {
+          console.warn("Supabase update skipped, using local store:", syncErr);
+        }
       }
-      toast.success("Period info updated — predictions refreshed");
+
+      toast.success("Period settings updated — predictions recalculated!");
       setOpen(false);
       await onSaved();
     } catch (e) {
@@ -106,70 +127,77 @@ export function EditPeriodDialog({ userId, initial, onSaved, trigger }: Props) {
       </DialogTrigger>
       <DialogContent className="rounded-3xl max-w-sm">
         <DialogHeader>
-          <DialogTitle className="font-display">Edit period info</DialogTitle>
+          <DialogTitle className="font-display">Edit Period & Cycle</DialogTitle>
           <DialogDescription>
-            Updates ovulation, fertile window and safe days instantly.
+            Update your cycle rhythm so our algorithm calculates your period and ovulation accurately.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           <div>
-            <Label htmlFor="lps" className="text-sm">Last period start</Label>
+            <Label htmlFor="last-start" className="text-xs font-semibold">
+              First day of last period
+            </Label>
             <Input
-              id="lps"
+              id="last-start"
               type="date"
-              max={format(new Date(), "yyyy-MM-dd")}
               value={lastStart}
+              max={format(new Date(), "yyyy-MM-dd")}
               onChange={(e) => setLastStart(e.target.value)}
-              className="rounded-xl h-11 mt-1.5"
+              className="mt-1.5 rounded-xl h-10"
             />
-            {lastStart && (
-              <p className="text-[11px] text-muted-foreground mt-1">
-                {format(parseISO(lastStart), "EEEE, MMMM d, yyyy")}
-              </p>
-            )}
           </div>
 
           <div>
-            <Label htmlFor="plen" className="text-sm">Period duration (days)</Label>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="period-len" className="text-xs font-semibold">
+                Period duration (days of bleeding)
+              </Label>
+              <span className="text-xs font-bold text-primary">{periodLen} days</span>
+            </div>
             <Input
-              id="plen"
+              id="period-len"
               type="number"
               min={2}
-              max={10}
+              max={12}
               value={periodLen}
-              onChange={(e) => setPeriodLen(parseInt(e.target.value) || 5)}
-              className="rounded-xl h-11 mt-1.5"
+              onChange={(e) => setPeriodLen(parseInt(e.target.value, 10) || 5)}
+              className="mt-1.5 rounded-xl h-10"
             />
           </div>
 
           <div>
-            <Label htmlFor="clen" className="text-sm">Average cycle length (days)</Label>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="cycle-len" className="text-xs font-semibold">
+                Average cycle length (days between periods)
+              </Label>
+              <span className="text-xs font-bold text-primary">{cycleLen} days</span>
+            </div>
             <Input
-              id="clen"
+              id="cycle-len"
               type="number"
               min={20}
-              max={45}
+              max={50}
               value={cycleLen}
-              onChange={(e) => setCycleLen(parseInt(e.target.value) || 28)}
-              className="rounded-xl h-11 mt-1.5"
+              onChange={(e) => setCycleLen(parseInt(e.target.value, 10) || 28)}
+              className="mt-1.5 rounded-xl h-10"
             />
             <p className="text-[11px] text-muted-foreground mt-1">
-              Ovulation predicted around day {Math.max(1, cycleLen - 14)}.
+              Normal cycle length ranges from 21 to 35 days.
             </p>
           </div>
         </div>
 
-        <DialogFooter className="gap-2 sm:gap-2">
-          <Button variant="outline" onClick={() => setOpen(false)} className="rounded-full">
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="ghost" onClick={() => setOpen(false)} className="rounded-full">
             Cancel
           </Button>
           <Button
             onClick={save}
             disabled={saving}
-            className="rounded-full bg-gradient-primary font-semibold"
+            className="rounded-full bg-gradient-primary font-bold"
           >
-            {saving ? "Saving…" : "Save changes"}
+            {saving ? "Saving…" : "Save Changes"}
           </Button>
         </DialogFooter>
       </DialogContent>
