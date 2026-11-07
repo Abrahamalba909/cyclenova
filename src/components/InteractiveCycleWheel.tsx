@@ -43,40 +43,40 @@ export function InteractiveCycleWheel({ stats, goal = "tracking", privacyMode = 
       phase: "menstrual",
       startDay: 1,
       endDay: periodDays,
-      color: "oklch(0.55 0.22 15)",
-      glowColor: "rgba(225, 29, 72, 0.4)",
+      color: "#E11D48",
+      glowColor: "rgba(225, 29, 72, 0.3)",
       label: "Period",
     },
     {
       phase: "follicular",
       startDay: periodDays + 1,
       endDay: fertileStartDay - 1,
-      color: "oklch(0.68 0.16 155)",
-      glowColor: "rgba(16, 185, 129, 0.4)",
+      color: "#059669",
+      glowColor: "rgba(5, 150, 105, 0.3)",
       label: "Follicular",
     },
     {
       phase: "fertile",
       startDay: fertileStartDay,
       endDay: fertileEndDay,
-      color: "oklch(0.75 0.18 75)",
-      glowColor: "rgba(245, 158, 11, 0.5)",
+      color: "#D97706",
+      glowColor: "rgba(217, 119, 6, 0.3)",
       label: "Fertile",
     },
     {
       phase: "luteal",
       startDay: fertileEndDay + 1,
       endDay: pmsStartDay - 1,
-      color: "oklch(0.62 0.2 290)",
-      glowColor: "rgba(139, 92, 246, 0.4)",
+      color: "#7C3AED",
+      glowColor: "rgba(124, 58, 237, 0.3)",
       label: "Luteal",
     },
     {
       phase: "pms",
       startDay: pmsStartDay,
       endDay: totalDays,
-      color: "oklch(0.65 0.16 45)",
-      glowColor: "rgba(217, 119, 6, 0.4)",
+      color: "#9333EA",
+      glowColor: "rgba(147, 51, 234, 0.3)",
       label: "PMS",
     },
   ], [periodDays, fertileStartDay, fertileEndDay, pmsStartDay, totalDays]);
@@ -189,7 +189,7 @@ export function InteractiveCycleWheel({ stats, goal = "tracking", privacyMode = 
             </filter>
             <linearGradient id="needleGlow" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="100%" stopColor="oklch(0.55 0.22 15)" />
+              <stop offset="100%" stopColor="#E11D48" />
             </linearGradient>
           </defs>
 
@@ -246,7 +246,7 @@ export function InteractiveCycleWheel({ stats, goal = "tracking", privacyMode = 
             <circle r="14" fill="white" filter="url(#glow)" className="dark:fill-slate-900" />
             <circle
               r="10"
-              fill="oklch(0.55 0.22 15)"
+              fill="#E11D48"
               stroke="white"
               strokeWidth="2.5"
               className="drop-shadow-md"

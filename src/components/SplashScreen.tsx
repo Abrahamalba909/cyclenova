@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 const LOGO_SRC = "/icons/icon-512.png?v=2";
 const LOGO_FALLBACK = "/icons/icon-192.png?v=2";
 const SESSION_KEY = "cn:splash:shown";
-const DURATION_MS = 2400;
-const REDUCED_DURATION_MS = 700;
+const DURATION_MS = 400;
+const REDUCED_DURATION_MS = 200;
 
 /**
  * Premium animated splash screen.

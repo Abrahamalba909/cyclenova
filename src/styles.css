@@ -39,8 +39,10 @@
   --color-ring: var(--ring);
 
   --color-period: var(--period);
+  --color-follicular: var(--follicular);
   --color-fertile: var(--fertile);
   --color-ovulation: var(--ovulation);
+  --color-luteal: var(--luteal);
   --color-pms: var(--pms);
 
   --color-chart-1: var(--chart-1);
@@ -53,77 +55,104 @@
 :root {
   --radius: 1rem;
 
-  /* Brand */
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.15 0.02 340);
+  /* High contrast, clean clinical wellness palette */
+  --background: #F8FAFC;              /* slate-50: Crisp, clean alabaster */
+  --foreground: #0F172A;              /* slate-900: Deep obsidian charcoal for pin-sharp readability */
 
-  --card: oklch(1 0 0 / 0.85);
-  --card-foreground: oklch(0.15 0.02 340);
+  --card: #FFFFFF;                    /* Solid pure white, 100% opaque - no bleed-through */
+  --card-foreground: #0F172A;
 
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.02 340);
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
 
-  /* Deep Pink #C2185B */
-  --primary: oklch(0.5 0.18 0);
-  --primary-foreground: oklch(1 0 0);
-  --primary-soft: oklch(0.95 0.04 350);
+  /* Primary Brand: Refined Crimson / Ruby Rose */
+  --primary: #E11D48;                 /* rose-600 */
+  --primary-foreground: #FFFFFF;
+  --primary-soft: #FFE4E6;            /* rose-100 */
 
-  --secondary: oklch(0.97 0.01 340 / 0.85);
-  --secondary-foreground: oklch(0.15 0.02 340);
+  --secondary: #F1F5F9;               /* slate-100 */
+  --secondary-foreground: #0F172A;
 
-  --muted: oklch(0.97 0.005 340 / 0.85);
-  --muted-foreground: oklch(0.5 0.02 340);
+  --muted: #F1F5F9;                   /* slate-100 */
+  --muted-foreground: #475569;        /* slate-600: High-contrast secondary text */
 
-  --accent: oklch(0.95 0.04 350);
-  --accent-foreground: oklch(0.5 0.18 0);
+  --accent: #F1F5F9;
+  --accent-foreground: #0F172A;
 
-  --destructive: oklch(0.6 0.22 27);
-  --destructive-foreground: oklch(1 0 0);
+  --destructive: #DC2626;             /* red-600 */
+  --destructive-foreground: #FFFFFF;
 
-  --border: oklch(0.93 0.01 340);
-  --input: oklch(0.93 0.01 340);
-  --ring: oklch(0.5 0.18 0);
+  --border: #E2E8F0;                  /* slate-200: Crisp structural definition */
+  --input: #E2E8F0;
+  --ring: #E11D48;
 
-  /* Cycle phase colors */
-  --period: oklch(0.5 0.18 0);            /* Deep pink */
-  --fertile: oklch(0.88 0.06 350);        /* Light pink */
-  --ovulation: oklch(0.55 0.18 310);      /* Purple */
-  --pms: oklch(0.7 0.02 340);             /* Soft gray */
+  /* Distinct high-contrast cycle phase colors */
+  --period: #E11D48;                  /* Ruby Rose (Menstrual) */
+  --follicular: #059669;              /* Sage Emerald (Follicular) */
+  --fertile: #D97706;                 /* Warm Amber Gold (Fertile Window) */
+  --ovulation: #EA580C;               /* Sunset Coral (Ovulation Peak) */
+  --luteal: #7C3AED;                  /* Royal Iris (Luteal) */
+  --pms: #9333EA;                     /* Twilight Violet (PMS) */
 
-  --chart-1: oklch(0.5 0.18 0);
-  --chart-2: oklch(0.55 0.18 310);
-  --chart-3: oklch(0.88 0.06 350);
-  --chart-4: oklch(0.7 0.02 340);
-  --chart-5: oklch(0.15 0.02 340);
+  --chart-1: #E11D48;
+  --chart-2: #059669;
+  --chart-3: #D97706;
+  --chart-4: #7C3AED;
+  --chart-5: #0F172A;
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.95 0.04 350) 0%, oklch(0.98 0.02 340) 50%, oklch(1 0 0) 100%);
-  --gradient-primary: linear-gradient(135deg, oklch(0.5 0.18 0), oklch(0.55 0.18 350));
-  --gradient-card: linear-gradient(180deg, oklch(1 0 0 / 0.9), oklch(0.98 0.02 340 / 0.85));
-  --shadow-soft: 0 4px 20px -4px oklch(0.5 0.18 0 / 0.12);
-  --shadow-glow: 0 8px 40px -8px oklch(0.5 0.18 0 / 0.25);
+  --gradient-hero: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+  --gradient-primary: linear-gradient(135deg, #E11D48 0%, #BE123C 100%);
+  --gradient-card: linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 100%);
+  --shadow-soft: 0 1px 3px 0 rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.08);
+  --shadow-glow: 0 4px 14px 0 rgb(225 29 72 / 0.16);
 }
 
 .dark {
-  --background: oklch(0.12 0.02 340);
-  --foreground: oklch(0.97 0.01 340);
-  --card: oklch(0.16 0.02 340 / 0.7);
-  --card-foreground: oklch(0.97 0.01 340);
-  --popover: oklch(0.16 0.02 340);
-  --popover-foreground: oklch(0.97 0.01 340);
-  --primary: oklch(0.65 0.2 0);
-  --primary-foreground: oklch(0.12 0.02 340);
-  --primary-soft: oklch(0.25 0.06 350);
-  --secondary: oklch(0.22 0.02 340 / 0.7);
-  --secondary-foreground: oklch(0.97 0.01 340);
-  --muted: oklch(0.22 0.02 340 / 0.7);
-  --muted-foreground: oklch(0.7 0.02 340);
-  --accent: oklch(0.25 0.06 350);
-  --accent-foreground: oklch(0.97 0.01 340);
-  --destructive: oklch(0.65 0.2 27);
-  --destructive-foreground: oklch(0.97 0.01 340);
-  --border: oklch(0.25 0.02 340);
-  --input: oklch(0.25 0.02 340);
-  --ring: oklch(0.65 0.2 0);
+  --background: #090D16;              /* Deep obsidian slate */
+  --foreground: #F8FAFC;
+  --card: #111827;                    /* Solid slate-900 */
+  --card-foreground: #F8FAFC;
+  --popover: #111827;
+  --popover-foreground: #F8FAFC;
+
+  --primary: #F43F5E;                 /* Rose 500 */
+  --primary-foreground: #FFFFFF;
+  --primary-soft: #2E101C;
+
+  --secondary: #1E293B;
+  --secondary-foreground: #F8FAFC;
+
+  --muted: #1E293B;
+  --muted-foreground: #94A3B8;
+
+  --accent: #1E293B;
+  --accent-foreground: #F8FAFC;
+
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #1E293B;
+  --input: #1E293B;
+  --ring: #F43F5E;
+
+  --period: #F43F5E;
+  --follicular: #10B981;
+  --fertile: #F59E0B;
+  --ovulation: #FB923C;
+  --luteal: #8B5CF6;
+  --pms: #A855F7;
+
+  --chart-1: #F43F5E;
+  --chart-2: #10B981;
+  --chart-3: #F59E0B;
+  --chart-4: #8B5CF6;
+  --chart-5: #F8FAFC;
+
+  --gradient-hero: linear-gradient(180deg, #090D16 0%, #111827 100%);
+  --gradient-primary: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);
+  --gradient-card: linear-gradient(180deg, #111827 0%, #111827 100%);
+  --shadow-soft: 0 4px 12px 0 rgb(0 0 0 / 0.35);
+  --shadow-glow: 0 4px 20px 0 rgb(244 63 94 / 0.22);
 }
 
 @layer base {
@@ -160,293 +189,50 @@
   }
 }
 
-/* ============================================
-   Ambient Scene — themed animated background
-   ============================================ */
+/* ========================================================================
+   Clean Background Overrides — Eliminating Pink Glare & Background Blurs
+   ======================================================================== */
 
 .ambient-scene {
-  /* Smooth color transitions when theme changes */
-  transition: opacity 0.6s ease;
-}
-
-.ambient-wash-light,
-.ambient-wash-dark {
-  position: absolute;
-  inset: 0;
-  transition: opacity 0.8s ease;
+  pointer-events: none;
 }
 
 .ambient-wash-light {
-  background:
-    radial-gradient(ellipse at 80% 90%, oklch(0.92 0.07 350 / 0.55) 0%, transparent 55%),
-    radial-gradient(ellipse at 15% 10%, oklch(0.96 0.04 340 / 0.7) 0%, transparent 60%),
-    linear-gradient(160deg, oklch(0.98 0.015 340) 0%, oklch(0.96 0.03 350) 100%);
+  position: absolute;
+  inset: 0;
+  background: #F8FAFC !important;
 }
 
 .ambient-wash-dark {
-  background:
-    radial-gradient(ellipse at 80% 90%, oklch(0.32 0.14 340 / 0.7) 0%, transparent 55%),
-    radial-gradient(ellipse at 15% 10%, oklch(0.22 0.1 310 / 0.6) 0%, transparent 60%),
-    linear-gradient(160deg, oklch(0.1 0.03 320) 0%, oklch(0.14 0.05 340) 100%);
-}
-
-/* Drifting glow orbs */
-.ambient-orb {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(60px);
-  opacity: 0.55;
-  will-change: transform, opacity;
-  animation: ambient-drift 22s ease-in-out infinite;
-}
-
-.dark .ambient-orb { opacity: 0.45; mix-blend-mode: screen; }
-
-.ambient-orb--1 {
-  width: 380px; height: 380px;
-  top: -80px; left: -100px;
-  background: radial-gradient(circle, oklch(0.85 0.12 350) 0%, transparent 70%);
-  animation-delay: 0s;
-}
-.dark .ambient-orb--1 {
-  background: radial-gradient(circle, oklch(0.55 0.22 340) 0%, transparent 70%);
-}
-
-.ambient-orb--2 {
-  width: 460px; height: 460px;
-  top: 30%; right: -160px;
-  background: radial-gradient(circle, oklch(0.9 0.08 340) 0%, transparent 70%);
-  animation-delay: -7s;
-  animation-duration: 28s;
-}
-.dark .ambient-orb--2 {
-  background: radial-gradient(circle, oklch(0.5 0.24 0) 0%, transparent 70%);
-}
-
-.ambient-orb--3 {
-  width: 320px; height: 320px;
-  bottom: 10%; left: 15%;
-  background: radial-gradient(circle, oklch(0.88 0.1 0) 0%, transparent 70%);
-  animation-delay: -14s;
-  animation-duration: 32s;
-}
-.dark .ambient-orb--3 {
-  background: radial-gradient(circle, oklch(0.45 0.2 320) 0%, transparent 70%);
-}
-
-@keyframes ambient-drift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  33%      { transform: translate3d(40px, -30px, 0) scale(1.08); }
-  66%      { transform: translate3d(-30px, 40px, 0) scale(0.95); }
-}
-
-/* Particles (light: dust motes, dark: stars) */
-.ambient-particles {
   position: absolute;
   inset: 0;
+  background: #090D16 !important;
 }
 
-.ambient-particle {
-  position: absolute;
-  width: 4px; height: 4px;
-  border-radius: 9999px;
-  background: oklch(0.7 0.15 350 / 0.6);
-  will-change: transform, opacity;
-  animation: ambient-float 14s ease-in-out infinite;
-}
-
-.dark .ambient-particle {
-  background: oklch(0.95 0.05 340 / 0.85);
-  box-shadow: 0 0 6px oklch(0.7 0.22 340 / 0.6);
-}
-
-.ambient-particle--0 { top: 12%; left: 8%;  animation-delay: 0s;     animation-duration: 16s; }
-.ambient-particle--1 { top: 24%; left: 78%; animation-delay: -3s;    animation-duration: 19s; width: 3px; height: 3px; }
-.ambient-particle--2 { top: 38%; left: 22%; animation-delay: -6s;    animation-duration: 14s; width: 5px; height: 5px; }
-.ambient-particle--3 { top: 55%; left: 88%; animation-delay: -2s;    animation-duration: 22s; }
-.ambient-particle--4 { top: 68%; left: 12%; animation-delay: -9s;    animation-duration: 17s; width: 3px; height: 3px; }
-.ambient-particle--5 { top: 82%; left: 70%; animation-delay: -5s;    animation-duration: 20s; width: 6px; height: 6px; }
-
-/* Repeat with offsets for additional particles via nth-child variations */
-.ambient-particle:nth-child(7)  { top: 18%; left: 45%; animation-delay: -11s; }
-.ambient-particle:nth-child(8)  { top: 30%; left: 5%;  animation-delay: -4s; width: 5px; height: 5px; }
-.ambient-particle:nth-child(9)  { top: 45%; left: 60%; animation-delay: -8s; }
-.ambient-particle:nth-child(10) { top: 60%; left: 35%; animation-delay: -13s; width: 3px; height: 3px; }
-.ambient-particle:nth-child(11) { top: 72%; left: 50%; animation-delay: -1s; }
-.ambient-particle:nth-child(12) { top: 88%; left: 25%; animation-delay: -10s; width: 4px; height: 4px; }
-.ambient-particle:nth-child(13) { top: 8%;  left: 60%; animation-delay: -7s; width: 3px; height: 3px; }
-.ambient-particle:nth-child(14) { top: 50%; left: 5%;  animation-delay: -12s; }
-.ambient-particle:nth-child(15) { top: 92%; left: 55%; animation-delay: -6s; width: 5px; height: 5px; }
-.ambient-particle:nth-child(16) { top: 35%; left: 40%; animation-delay: -15s; width: 3px; height: 3px; }
-.ambient-particle:nth-child(17) { top: 78%; left: 90%; animation-delay: -2s; }
-.ambient-particle:nth-child(18) { top: 20%; left: 28%; animation-delay: -9s; width: 4px; height: 4px; }
-
-@keyframes ambient-float {
-  0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.3; }
-  50%      { transform: translate3d(0, -24px, 0); opacity: 0.85; }
-}
-
-/* The character — anchored bottom-right, slow breathing */
+/* Completely hide blurry floating orbs, particles, and overlay characters */
+.ambient-orb,
+.ambient-particle,
 .ambient-character {
-  position: absolute;
-  bottom: 0;
-  right: -4%;
-  width: min(92vw, 640px);
-  max-width: 92vw;
-  pointer-events: none;
-  will-change: transform;
-  animation: ambient-breath 7s ease-in-out infinite;
-  /* Soft warmth glow behind character */
-  filter: drop-shadow(0 0 60px oklch(0.7 0.18 350 / 0.3));
-  opacity: 0.45;
-  mix-blend-mode: normal;
-}
-
-.dark .ambient-character {
-  filter: drop-shadow(0 0 80px oklch(0.55 0.22 340 / 0.5));
-  opacity: 0.42;
-}
-
-.ambient-character img {
-  width: 100%;
-  height: auto;
-  display: block;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-@keyframes ambient-breath {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50%      { transform: translate3d(0, -4px, 0) scale(1.012); }
-}
-
-/* Vignette overlays — keep top of screen readable for headers/cards */
-.ambient-vignette-light,
-.ambient-vignette-dark {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  transition: opacity 0.8s ease;
-}
-
-.ambient-vignette-light {
-  background:
-    linear-gradient(180deg, oklch(1 0 0 / 0.18) 0%, transparent 28%, transparent 72%, oklch(1 0 0 / 0.18) 100%);
-}
-
-.ambient-vignette-dark {
-  background:
-    linear-gradient(180deg, oklch(0.1 0.03 340 / 0.35) 0%, transparent 28%, transparent 70%, oklch(0.1 0.03 340 / 0.35) 100%);
-}
-
-/* Reduced motion — pause all ambient animations */
-@media (prefers-reduced-motion: reduce) {
-  .ambient-orb,
-  .ambient-particle,
-  .ambient-character {
-    animation: none !important;
-  }
-}
-
-/* On very small screens, slightly fade the character so cards stay readable */
-@media (max-width: 380px) {
-  .ambient-character { opacity: 0.4; }
-}
-
-
-/* ============================================
-   Phase-aware ambient overrides
-   These re-tint the wash + orbs based on the user's current cycle phase.
-   The character illustration itself is swapped in JS.
-   ============================================ */
-
-/* PERIOD — soft red, comforting */
-.ambient-phase-period .ambient-wash-light {
-  background:
-    radial-gradient(ellipse at 80% 90%, oklch(0.86 0.13 20 / 0.55) 0%, transparent 55%),
-    radial-gradient(ellipse at 15% 10%, oklch(0.94 0.06 15 / 0.7) 0%, transparent 60%),
-    linear-gradient(160deg, oklch(0.97 0.025 15) 0%, oklch(0.94 0.06 20) 100%);
-}
-.ambient-phase-period .ambient-wash-dark {
-  background:
-    radial-gradient(ellipse at 80% 90%, oklch(0.38 0.18 15 / 0.7) 0%, transparent 55%),
-    radial-gradient(ellipse at 15% 10%, oklch(0.22 0.12 10 / 0.6) 0%, transparent 60%),
-    linear-gradient(160deg, oklch(0.1 0.04 15) 0%, oklch(0.15 0.08 18) 100%);
-}
-.ambient-phase-period .ambient-orb--1 {
-  background: radial-gradient(circle, oklch(0.78 0.18 18) 0%, transparent 70%);
-}
-.ambient-phase-period .ambient-orb--2 {
-  background: radial-gradient(circle, oklch(0.85 0.14 20) 0%, transparent 70%);
-}
-.ambient-phase-period .ambient-orb--3 {
-  background: radial-gradient(circle, oklch(0.82 0.16 10) 0%, transparent 70%);
-}
-.ambient-phase-period .ambient-particle {
-  background: oklch(0.7 0.18 20 / 0.7);
-}
-
-/* OVULATION — lavender, energetic */
-.ambient-phase-ovulation .ambient-wash-light {
-  background:
-    radial-gradient(ellipse at 80% 90%, oklch(0.88 0.1 300 / 0.55) 0%, transparent 55%),
-    radial-gradient(ellipse at 15% 10%, oklch(0.95 0.05 290 / 0.7) 0%, transparent 60%),
-    linear-gradient(160deg, oklch(0.97 0.025 295) 0%, oklch(0.94 0.06 300) 100%);
-}
-.ambient-phase-ovulation .ambient-wash-dark {
-  background:
-    radial-gradient(ellipse at 80% 90%, oklch(0.38 0.16 300 / 0.7) 0%, transparent 55%),
-    radial-gradient(ellipse at 15% 10%, oklch(0.22 0.12 290 / 0.6) 0%, transparent 60%),
-    linear-gradient(160deg, oklch(0.12 0.05 300) 0%, oklch(0.16 0.08 295) 100%);
-}
-.ambient-phase-ovulation .ambient-orb--1 {
-  background: radial-gradient(circle, oklch(0.8 0.16 300) 0%, transparent 70%);
-}
-.ambient-phase-ovulation .ambient-orb--2 {
-  background: radial-gradient(circle, oklch(0.85 0.13 290) 0%, transparent 70%);
-}
-.ambient-phase-ovulation .ambient-orb--3 {
-  background: radial-gradient(circle, oklch(0.82 0.14 310) 0%, transparent 70%);
-}
-.ambient-phase-ovulation .ambient-particle {
-  background: oklch(0.78 0.18 300 / 0.75);
-  box-shadow: 0 0 6px oklch(0.7 0.2 300 / 0.5);
-}
-
-/* LUTEAL — soft warm pink, calm */
-.ambient-phase-luteal .ambient-wash-light {
-  background:
-    radial-gradient(ellipse at 80% 90%, oklch(0.9 0.08 350 / 0.55) 0%, transparent 55%),
-    radial-gradient(ellipse at 15% 10%, oklch(0.96 0.04 345 / 0.7) 0%, transparent 60%),
-    linear-gradient(160deg, oklch(0.98 0.02 348) 0%, oklch(0.95 0.05 350) 100%);
-}
-.ambient-phase-luteal .ambient-wash-dark {
-  background:
-    radial-gradient(ellipse at 80% 90%, oklch(0.34 0.14 350 / 0.7) 0%, transparent 55%),
-    radial-gradient(ellipse at 15% 10%, oklch(0.22 0.1 345 / 0.6) 0%, transparent 60%),
-    linear-gradient(160deg, oklch(0.11 0.04 350) 0%, oklch(0.15 0.06 348) 100%);
-}
-
-/* Static mode — animation off, no transitions to avoid flicker */
-.ambient-static .ambient-orb,
-.ambient-static .ambient-particle,
-.ambient-static .ambient-character {
   display: none !important;
 }
 
-/* ============================================
-   Animated app icons — lightweight CSS micro-motion
-   Used in the bottom nav. All transform/opacity only.
-   ============================================ */
+.ambient-vignette-light,
+.ambient-vignette-dark {
+  display: none !important;
+}
+
+/* ========================================================================
+   Animated App Icons — Clean Micro-Motions
+   ======================================================================== */
 
 .icon-pulse {
   animation: icon-pulse 3.6s ease-in-out infinite;
   transform-origin: center;
-  will-change: transform, filter;
+  will-change: transform;
 }
 @keyframes icon-pulse {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 transparent); }
-  50%      { transform: scale(1.08); filter: drop-shadow(0 0 6px oklch(0.7 0.18 350 / 0.55)); }
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
 }
 
 .icon-flip {
@@ -464,25 +250,6 @@
 .icon-halo {
   position: relative;
   display: inline-flex;
-}
-.icon-halo::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 9999px;
-  background: conic-gradient(from 0deg,
-    oklch(0.7 0.18 350 / 0) 0deg,
-    oklch(0.7 0.18 350 / 0.55) 120deg,
-    oklch(0.55 0.18 310 / 0.55) 240deg,
-    oklch(0.7 0.18 350 / 0) 360deg);
-  filter: blur(3px);
-  animation: icon-halo-spin 5s linear infinite;
-  opacity: 0.7;
-  pointer-events: none;
-  z-index: -1;
-}
-@keyframes icon-halo-spin {
-  to { transform: rotate(360deg); }
 }
 
 .icon-float {
@@ -504,24 +271,22 @@
   40%, 80%   { transform: rotate(10deg); }
 }
 
-/* Active nav item — soften the motion so the highlight reads clearly */
 .nav-active .icon-pulse,
 .nav-active .icon-flip,
 .nav-active .icon-float { animation-duration: 5s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .icon-pulse, .icon-flip, .icon-halo::before, .icon-float, .icon-shake {
+  .icon-pulse, .icon-flip, .icon-float, .icon-shake {
     animation: none !important;
   }
 }
 
 /* ========================================================================
-   Splash screen — premium animated launch
+   Splash Screen — Clean, High-Contrast Launch
    ======================================================================== */
 .splash-root {
   position: fixed;
   inset: 0;
-  /* Sit above everything (modals, toasts, sticky nav) so it fully blocks UI. */
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -529,84 +294,45 @@
   justify-content: center;
   gap: 1.25rem;
   overflow: hidden;
-  isolation: isolate;
-  /* Hard interaction block while splash is visible. */
   pointer-events: auto;
-  touch-action: none;
   user-select: none;
-  -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .splash-bg {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 30%, oklch(0.92 0.07 340) 0%, oklch(0.82 0.12 350) 45%, oklch(0.55 0.19 350) 100%);
+  background: #0F172A !important;
   z-index: -2;
 }
 
 .dark .splash-bg {
-  background:
-    radial-gradient(ellipse at 50% 30%, oklch(0.32 0.10 350) 0%, oklch(0.18 0.06 340) 55%, oklch(0.10 0.03 340) 100%);
+  background: #090D16 !important;
 }
 
 .splash-glow {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 520px;
-  height: 520px;
-  transform: translate(-50%, -55%);
-  background: radial-gradient(circle, oklch(0.75 0.18 350 / 0.55) 0%, transparent 65%);
-  filter: blur(40px);
-  z-index: -1;
-  animation: splash-breath 2.4s ease-in-out infinite;
-}
-
-.dark .splash-glow {
-  background: radial-gradient(circle, oklch(0.55 0.22 350 / 0.7) 0%, transparent 60%);
-}
-
-@keyframes splash-breath {
-  0%, 100% { opacity: 0.7; transform: translate(-50%, -55%) scale(1); }
-  50%      { opacity: 1;   transform: translate(-50%, -55%) scale(1.08); }
+  display: none !important;
 }
 
 .splash-logo-wrap {
   position: relative;
-  width: 160px;
-  height: 160px;
-  border-radius: 38px;
+  width: 140px;
+  height: 140px;
+  border-radius: 32px;
   overflow: hidden;
-  box-shadow:
-    0 30px 80px -20px oklch(0.45 0.20 350 / 0.55),
-    0 0 60px oklch(0.75 0.18 350 / 0.45);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  background: #FFFFFF;
+  padding: 12px;
 }
 
 .splash-logo {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
 
 .splash-sweep {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 60%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    oklch(1 0 0 / 0) 20%,
-    oklch(1 0 0 / 0.55) 50%,
-    oklch(1 0 0 / 0) 80%,
-    transparent 100%
-  );
-  pointer-events: none;
-  mix-blend-mode: screen;
+  display: none !important;
 }
 
 .splash-wordmark {
@@ -614,18 +340,5 @@
   font-weight: 700;
   font-size: 1.75rem;
   letter-spacing: -0.01em;
-  color: oklch(0.25 0.06 340);
-  text-shadow: 0 2px 20px oklch(1 0 0 / 0.4);
-}
-
-.dark .splash-wordmark {
-  color: oklch(0.96 0.02 340);
-  text-shadow: 0 0 24px oklch(0.65 0.22 350 / 0.6);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* Quick fade only — no breathing glow, no sweep, no logo motion. */
-  .splash-glow,
-  .splash-sweep { display: none !important; animation: none !important; }
-  .splash-logo-wrap { animation: none !important; transform: none !important; }
+  color: #FFFFFF !important;
 }

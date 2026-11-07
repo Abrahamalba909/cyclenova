@@ -33,7 +33,7 @@ export const Route = createFileRoute("/dashboard")({
   component: Dashboard,
 });
 
-function Dashboard() {
+export function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const {
@@ -146,13 +146,13 @@ function Dashboard() {
               label="Cycle Day"
               value={`Day ${stats.cycleDay}`}
               sub={`of ${stats.averageCycleLength} days`}
-              accent="var(--primary)"
+              accent="#E11D48"
             />
             <MetricCard
               label="Next Period"
               value={stats.daysUntilPeriod <= 0 ? "Likely Today" : `${stats.daysUntilPeriod}d away`}
               sub={format(stats.nextPeriodStart, "MMM d")}
-              accent="oklch(0.55 0.22 15)"
+              accent="#E11D48"
             />
             <MetricCard
               label="Regularity"
@@ -166,7 +166,7 @@ function Dashboard() {
                       : "Calculating"
               }
               sub={`${stats.confidenceScore}% confidence`}
-              accent="oklch(0.68 0.16 155)"
+              accent="#059669"
             />
           </div>
         </div>

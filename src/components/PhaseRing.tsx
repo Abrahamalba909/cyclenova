@@ -30,8 +30,8 @@ export function PhaseRing({ cycleDay, cycleLength, daysUntil, phase, stats, priv
       <svg width={size} height={size} className="-rotate-90">
         <defs>
           <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="oklch(0.55 0.22 15)" />
-            <stop offset="100%" stopColor="oklch(0.75 0.18 75)" />
+            <stop offset="0%" stopColor="#E11D48" />
+            <stop offset="100%" stopColor="#D97706" />
           </linearGradient>
         </defs>
         <circle

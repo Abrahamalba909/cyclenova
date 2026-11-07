@@ -531,43 +531,43 @@ export const phaseDescription: Record<Phase, string> = {
 
 export const phaseColorMap: Record<Phase, { bg: string; text: string; border: string }> = {
   menstrual: {
-    bg: "oklch(0.55 0.22 15)",
+    bg: "#E11D48",
     text: "#ffffff",
-    border: "oklch(0.65 0.22 15)",
+    border: "#BE123C",
   },
   period: {
-    bg: "oklch(0.55 0.22 15)",
+    bg: "#E11D48",
     text: "#ffffff",
-    border: "oklch(0.65 0.22 15)",
+    border: "#BE123C",
   },
   follicular: {
-    bg: "oklch(0.68 0.16 155)",
+    bg: "#059669",
     text: "#ffffff",
-    border: "oklch(0.78 0.16 155)",
+    border: "#047857",
   },
   fertile: {
-    bg: "oklch(0.75 0.18 75)",
-    text: "#1e1b4b",
-    border: "oklch(0.85 0.18 75)",
+    bg: "#D97706",
+    text: "#ffffff",
+    border: "#B45309",
   },
   ovulation: {
-    bg: "oklch(0.7 0.2 65)",
-    text: "#1e1b4b",
-    border: "oklch(0.8 0.2 65)",
+    bg: "#EA580C",
+    text: "#ffffff",
+    border: "#C2410C",
   },
   luteal: {
-    bg: "oklch(0.62 0.2 290)",
+    bg: "#7C3AED",
     text: "#ffffff",
-    border: "oklch(0.72 0.2 290)",
+    border: "#6D28D9",
   },
   pms: {
-    bg: "oklch(0.65 0.16 45)",
+    bg: "#9333EA",
     text: "#ffffff",
-    border: "oklch(0.75 0.16 45)",
+    border: "#7E22CE",
   },
   normal: {
-    bg: "oklch(0.9 0.03 340)",
-    text: "inherit",
-    border: "oklch(0.85 0.03 340)",
+    bg: "#F1F5F9",
+    text: "#0F172A",
+    border: "#CBD5E1",
   },
 };
