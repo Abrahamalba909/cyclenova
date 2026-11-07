@@ -96,3 +96,4 @@ export function CycleForecastTimeline({ profile, periods }: Props) {
     </div>
   );
 }
+

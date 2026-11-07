@@ -426,13 +426,27 @@ export function useCycleStore() {
 
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user) {
-        await supabase.from("symptoms").upsert(
-          {
-            user_id: session.user.id,
-            ...log,
-          },
-          { onConflict: "user_id,log_date" }
+        const dbPayload: Record<string, unknown> = {
+          user_id: session.user.id,
+          log_date: log.log_date,
+          cramps: log.cramps,
+          headache: log.headache,
+          mood: log.mood,
+          acne: log.acne,
+          bloating: log.bloating,
+          back_pain: log.back_pain,
+          fatigue: log.fatigue,
+          energy: log.energy,
+          sleep: log.sleep,
+          libido: log.libido,
+        };
+        // Clean undefined values
+        Object.keys(dbPayload).forEach(
+          (k) => dbPayload[k] === undefined && delete dbPayload[k]
         );
+        await (supabase.from("symptoms") as any).upsert(dbPayload, {
+          onConflict: "user_id,log_date",
+        });
       }
     },
     [persistLocal]
@@ -523,3 +537,4 @@ export function useCycleStore() {
     importDataJson,
   };
 }
+

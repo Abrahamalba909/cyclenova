@@ -367,3 +367,4 @@ export function InteractiveCycleWheel({ stats, goal = "tracking", privacyMode = 
     </div>
   );
 }
+
